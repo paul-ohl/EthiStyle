@@ -1,6 +1,5 @@
 #![warn(clippy::perf)]
 
-use secrecy::ExposeSecret;
 use sqlx::postgres::PgPoolOptions;
 use tokio::net::TcpListener;
 use zero2prod::{
@@ -18,8 +17,7 @@ async fn main() {
     let configuration = get_config().expect("Could not read configuration");
     let pg_pool = PgPoolOptions::new()
         .acquire_timeout(std::time::Duration::from_secs(3))
-        .connect_lazy(configuration.database.connection_string().expose_secret())
-        .expect("Could not connect to database");
+        .connect_lazy_with(configuration.database.with_db());
 
     let address = format!(
         "{}:{}",

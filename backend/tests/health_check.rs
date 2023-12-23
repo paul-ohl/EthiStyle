@@ -1,5 +1,4 @@
 use once_cell::sync::Lazy;
-use secrecy::ExposeSecret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use tokio::net::TcpListener;
 use uuid::Uuid;
@@ -43,16 +42,15 @@ async fn spawn_app() -> TestApp {
 }
 
 async fn configure_database(config: &DatabaseSettings) -> PgPool {
-    let mut connection =
-        PgConnection::connect(config.connection_string_without_db().expose_secret())
-            .await
-            .expect("Could not connect to Postgres");
+    let mut connection = PgConnection::connect_with(&config.without_db())
+        .await
+        .expect("Could not connect to Postgres");
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.name).as_str())
         .await
         .expect("Failed to create the database");
 
-    let pg_pool = PgPool::connect(config.connection_string().expose_secret())
+    let pg_pool = PgPool::connect_with(config.with_db())
         .await
         .expect("Failed to connect to the database");
     sqlx::migrate!("./migrations")
