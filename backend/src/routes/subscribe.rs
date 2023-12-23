@@ -1,19 +1,40 @@
-use axum::{extract::State, http::StatusCode, Extension, Form};
+use axum::extract::{Extension, Form};
 use chrono::Utc;
+use hyper::StatusCode;
 use sqlx::PgPool;
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
-    name: String,
     email: String,
+    name: String,
 }
 
+#[tracing::instrument(
+    name = "Adding a new subscriber",
+    skip(form, pool),
+    fields(
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
+    )
+)]
 pub async fn subscribe(
     Extension(pool): Extension<PgPool>,
     Form(form): Form<FormData>,
 ) -> StatusCode {
-    let query_result = sqlx::query!(
+    if insert_subscriber(&pool, &form).await.is_ok() {
+        StatusCode::OK
+    } else {
+        StatusCode::INTERNAL_SERVER_ERROR
+    }
+}
+
+#[tracing::instrument(
+    name = "Saving new subscriber details in the database",
+    skip(form, pool)
+)]
+async fn insert_subscriber(pool: &PgPool, form: &FormData) -> Result<(), sqlx::Error> {
+    sqlx::query!(
         r#"
         INSERT INTO subscriptions (id, email, name, subscribed_at)
         VALUES ($1, $2, $3, $4)
@@ -23,13 +44,12 @@ pub async fn subscribe(
         form.name,
         Utc::now(),
     )
-    .execute(&pool)
-    .await;
-    match query_result {
-        Ok(_) => StatusCode::OK,
-        Err(err) => {
-            println!("Failed to execute query: {err}");
-            StatusCode::INTERNAL_SERVER_ERROR
-        }
-    }
+    .execute(pool)
+    .await
+    .map_err(|err| {
+        tracing::error!("Failed to execute query: {:?}", err);
+        err
+    })?;
+
+    Ok(())
 }

@@ -3043,9 +3043,11 @@ dependencies = [
  "http-body 1.0.0",
  "http-body-util",
  "pin-project-lite",
+ "tower",
  "tower-layer",
  "tower-service",
  "tracing",
+ "uuid",
 ]
 
 [[package]]

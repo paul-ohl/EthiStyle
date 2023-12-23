@@ -1,6 +1,6 @@
-// #![warn(clippy::perf, clippy::pedantic)]
-#![allow(unused)]
+#![warn(clippy::perf)]
 
 pub mod configuration;
 pub mod routes;
 pub mod startup;
+pub mod telemetry;
