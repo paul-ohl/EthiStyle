@@ -24,6 +24,9 @@ where
 /// Register a subscriber as global default to process span data.
 ///
 /// It should only be called once!
+///
+/// # Panics
+/// Panics if trying to set the subscriber twice or if the initialization of the subscriber fails.
 pub fn init_subscriber(subscriber: impl Subscriber + Send + Sync) {
     LogTracer::init().expect("Failed to set logger");
     set_global_default(subscriber).expect("Failed to set subscriber");

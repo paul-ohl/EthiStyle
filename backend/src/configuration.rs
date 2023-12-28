@@ -6,6 +6,11 @@ use sqlx::{
     ConnectOptions,
 };
 
+/// # Panics
+/// Panics if any of the required environment variables are missing or if the configuration file can't be read.
+///
+/// # Errors
+/// Returns an error if the configuration file is malformed.
 pub fn get_config() -> Result<Settings, config::ConfigError> {
     let config = config::Config::builder();
     let base_path = std::env::current_dir().expect("Failed to determine the current directory");
@@ -26,12 +31,14 @@ pub fn get_config() -> Result<Settings, config::ConfigError> {
     config.try_deserialize()
 }
 
+#[derive(Debug, PartialEq)]
 pub enum Environment {
     Dev,
     Prod,
 }
 
 impl Environment {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Environment::Dev => "dev",
@@ -47,8 +54,7 @@ impl TryFrom<String> for Environment {
             "dev" | "local" | "development" => Ok(Self::Dev),
             "prod" | "production" => Ok(Self::Prod),
             other => Err(format!(
-                "{} is not a supported environment. Use either `dev` or `prod`.",
-                other
+                "{other} is not a supported environment. Use either `dev` or `prod`.",
             )),
         }
     }
@@ -79,6 +85,7 @@ pub struct DatabaseSettings {
 }
 
 impl DatabaseSettings {
+    #[must_use]
     pub fn without_db(&self) -> PgConnectOptions {
         let ssl_mode = if self.require_ssl {
             PgSslMode::Require
@@ -94,9 +101,39 @@ impl DatabaseSettings {
             .ssl_mode(ssl_mode)
     }
 
+    #[must_use]
     pub fn with_db(&self) -> PgConnectOptions {
         self.without_db()
             .database(&self.name)
             .log_statements(tracing::log::LevelFilter::Trace)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn environment_parsing() {
+        assert_eq!(
+            Environment::Dev,
+            Environment::try_from("dev".to_string()).unwrap()
+        );
+        assert_eq!(
+            Environment::Dev,
+            Environment::try_from("development".to_string()).unwrap()
+        );
+        assert_eq!(
+            Environment::Dev,
+            Environment::try_from("local".to_string()).unwrap()
+        );
+        assert_eq!(
+            Environment::Prod,
+            Environment::try_from("prod".to_string()).unwrap()
+        );
+        assert_eq!(
+            Environment::Prod,
+            Environment::try_from("production".to_string()).unwrap()
+        );
+        assert!(Environment::try_from("something else".to_string()).is_err());
     }
 }

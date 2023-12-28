@@ -14,7 +14,7 @@ use tracing::Level;
 
 use crate::routes::{health_check, subscribe};
 
-/// Given a standard `TcpListener`, this function will initialize the axum server
+/// Given a standard `TcpListener` and a valid `PgPool`, this function will initialize the axum server
 ///
 /// # Errors
 /// The `run` function will fail if the `TcpListener` can't bind to the given port

@@ -22,9 +22,9 @@ config = { version = "0.13", default-features = false, features = ["yaml"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
 reqwest = { version = "0.11", default-features = false, features = [
-	"json",
-	"rustls-tls",
-	"cookies",
+  "json",
+  "rustls-tls",
+  "cookies",
 ] }
 log = "0.4"
 tracing = "0.1.19"
@@ -47,10 +47,10 @@ axum = "0.7"
 axum-extra = { version = "0.9", features = ["cookie"] }
 tower = "0.4"
 tower-http = { version = "0.5", features = [
-	"cors",
-	"trace",
-	"request-id",
-	"util",
+  "cors",
+  "trace",
+  "request-id",
+  "util",
 ] }
 hyper = { version = "1", features = ["full"] }
 jsonwebtoken = "9"
@@ -64,9 +64,9 @@ features = ["macros", "postgres", "uuid", "chrono", "migrate", "runtime-tokio"]
 [dev-dependencies]
 once_cell = "1.7.2"
 claims = "0.7.0"
-quickcheck = "1"
-quickcheck_macros = "1"
-fake = "2"
+quickcheck = "~0.9"
+quickcheck_macros = "~0.9"
+fake = "~2.3"
 wiremock = "0.5"
 serde_json = "1.0.61"
 linkify = "0.10"

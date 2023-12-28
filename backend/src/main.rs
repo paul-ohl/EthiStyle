@@ -1,4 +1,4 @@
-#![warn(clippy::perf)]
+#![warn(clippy::perf, clippy::pedantic)]
 
 use sqlx::postgres::PgPoolOptions;
 use tokio::net::TcpListener;
