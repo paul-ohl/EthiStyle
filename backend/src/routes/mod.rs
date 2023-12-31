@@ -1,5 +1,6 @@
 pub mod health_check;
-pub mod subscribe;
+pub mod protected_endpoint;
+pub mod user;
 
 pub use health_check::*;
-pub use subscribe::*;
+pub use protected_endpoint::*;
