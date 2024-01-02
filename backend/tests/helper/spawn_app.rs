@@ -1,12 +1,12 @@
-use once_cell::sync::Lazy;
-use sqlx::{Connection, Executor, PgConnection, PgPool};
-use tokio::net::TcpListener;
-use uuid::Uuid;
-use zero2prod::{
+use ethistyle::{
     configuration::{get_config, DatabaseSettings},
     startup::app,
     telemetry::{get_subscriber, init_subscriber},
 };
+use once_cell::sync::Lazy;
+use sqlx::{Connection, Executor, PgConnection, PgPool};
+use tokio::net::TcpListener;
+use uuid::Uuid;
 
 pub struct TestApp {
     pub address: String,

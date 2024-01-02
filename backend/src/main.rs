@@ -1,17 +1,17 @@
 #![warn(clippy::perf, clippy::pedantic)]
 
-use sqlx::postgres::PgPoolOptions;
-use tokio::net::TcpListener;
-use zero2prod::{
+use ethistyle::{
     configuration::get_config,
     startup::run,
     telemetry::{get_subscriber, init_subscriber},
 };
+use sqlx::postgres::PgPoolOptions;
+use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() {
     // setup telemetry
-    let subscriber = get_subscriber("zero2prod", "info", std::io::stdout);
+    let subscriber = get_subscriber("ethistyle", "info", std::io::stdout);
     init_subscriber(subscriber);
 
     let configuration = get_config().expect("Could not read configuration");
@@ -27,6 +27,6 @@ async fn main() {
         .await
         .expect("Could not bind on port");
 
-    log::info!("app launched, listening on {}", address);
+    tracing::info!("app launched, listening on {}", address);
     run(listener, pg_pool).await.unwrap();
 }
