@@ -1,14 +1,22 @@
-use axum::extract::{Extension, Form};
+use axum::{
+    extract::{Extension, Form},
+    http::StatusCode,
+    routing::post,
+    Router,
+};
 use chrono::Utc;
-use hyper::StatusCode;
 use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::domain::user;
 
+pub fn endpoint() -> Router {
+    Router::new().route("/register", post(register))
+}
+
 #[derive(serde::Deserialize)]
-pub struct FormData {
+struct FormData {
     email: String,
     name: String,
     password: String,
@@ -22,10 +30,7 @@ pub struct FormData {
         subscriber_name = %form.name
     )
 )]
-pub async fn register(
-    Extension(pool): Extension<PgPool>,
-    Form(form): Form<FormData>,
-) -> StatusCode {
+async fn register(Extension(pool): Extension<PgPool>, Form(form): Form<FormData>) -> StatusCode {
     let new_user_credentials = match form.try_into() {
         Ok(new_user) => new_user,
         Err(error_message) => {
@@ -40,7 +45,7 @@ pub async fn register(
     }
 }
 
-impl TryFrom<FormData> for user::NewUser {
+impl TryFrom<FormData> for user::RegisterUserDto {
     type Error = String;
     fn try_from(value: FormData) -> Result<Self, Self::Error> {
         let username = user::Name::parse(&value.name)?;
@@ -58,7 +63,10 @@ impl TryFrom<FormData> for user::NewUser {
     name = "Saving new subscriber details in the database",
     skip(new_subscriber, pool)
 )]
-async fn save_user(pool: &PgPool, new_subscriber: &user::NewUser) -> Result<(), sqlx::Error> {
+async fn save_user(
+    pool: &PgPool,
+    new_subscriber: &user::RegisterUserDto,
+) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"
         INSERT INTO Users (id, email, username, password_hash, subscribed_at)
