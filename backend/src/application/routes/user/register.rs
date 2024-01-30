@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use axum::{
     extract::{Extension, Form},
     http::StatusCode,
@@ -5,14 +7,18 @@ use axum::{
     Router,
 };
 use chrono::Utc;
-use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use uuid::Uuid;
 
-use crate::domain::user;
+use crate::domain::{
+    user::{self, RegisterUserDto},
+    AppState, Hasher,
+};
 
-pub fn endpoint() -> Router {
-    Router::new().route("/register", post(register))
+pub fn endpoint(shared_state: &Arc<AppState>) -> Router {
+    Router::new()
+        .route("/register", post(register))
+        .layer(Extension(shared_state.clone()))
 }
 
 #[derive(serde::Deserialize)]
@@ -24,34 +30,40 @@ struct FormData {
 
 #[tracing::instrument(
     name = "Registering a new user",
-    skip(form, pool),
+    skip(form, app_state),
     fields(
         subscriber_email = %form.email,
         subscriber_name = %form.name
     )
 )]
-async fn register(Extension(pool): Extension<PgPool>, Form(form): Form<FormData>) -> StatusCode {
-    let new_user_credentials = match form.try_into() {
+async fn register(
+    Extension(app_state): Extension<Arc<AppState>>,
+    Form(form): Form<FormData>,
+) -> StatusCode {
+    let new_user_credentials = match form.convert_to_user_dto(app_state.hasher.clone()) {
         Ok(new_user) => new_user,
         Err(error_message) => {
             tracing::error!("Failed to parse register details: {:?}", error_message);
             return StatusCode::BAD_REQUEST;
         }
     };
-    if save_user(&pool, &new_user_credentials).await.is_ok() {
+    if save_user(&app_state.db, &new_user_credentials)
+        .await
+        .is_ok()
+    {
         StatusCode::OK
     } else {
         StatusCode::INTERNAL_SERVER_ERROR
     }
 }
 
-impl TryFrom<FormData> for user::RegisterUserDto {
-    type Error = String;
-    fn try_from(value: FormData) -> Result<Self, Self::Error> {
-        let username = user::Name::parse(&value.name)?;
-        let email = user::Email::parse(&value.email)?;
-        let hash = user::PasswordHash::parse(&value.password)?;
-        Ok(Self {
+impl FormData {
+    #[allow(clippy::needless_pass_by_value)] // I am not talented enough to remove this allow
+    fn convert_to_user_dto(&self, hasher: Arc<dyn Hasher>) -> Result<RegisterUserDto, String> {
+        let username = user::Name::parse(&self.name)?;
+        let email = user::Email::parse(&self.email)?;
+        let hash = user::PasswordHash::hash_string(&self.password, hasher)?;
+        Ok(RegisterUserDto {
             email,
             username,
             hash,
@@ -75,7 +87,7 @@ async fn save_user(
         Uuid::new_v4(),
         new_subscriber.email.as_ref(),
         new_subscriber.username.as_ref(),
-        new_subscriber.hash.get_hash().expose_secret(),
+        new_subscriber.hash.expose_secret(),
         Utc::now(),
     )
     .execute(pool)

@@ -1,10 +1,17 @@
 #![warn(clippy::perf, clippy::pedantic)]
 
+use std::sync::Arc;
+
 use ethistyle::{
+    application::startup::run,
+    application::{
+        telemetry::{get_subscriber, init_subscriber},
+        ArgonHasher,
+    },
     configuration::get_config,
-    startup::run,
-    telemetry::{get_subscriber, init_subscriber},
+    domain::AppState,
 };
+use secrecy::Secret;
 use sqlx::postgres::PgPoolOptions;
 use tokio::net::TcpListener;
 
@@ -19,6 +26,12 @@ async fn main() {
         .acquire_timeout(std::time::Duration::from_secs(3))
         .connect_lazy_with(configuration.database.with_db());
 
+    let app_state = AppState {
+        db: pg_pool,
+        hasher: Arc::new(ArgonHasher::new()),
+        jwt_secret: Secret::new(configuration.jwt_secret),
+    };
+
     let address = format!(
         "{}:{}",
         configuration.application.host, configuration.application.port
@@ -28,5 +41,5 @@ async fn main() {
         .expect("Could not bind on port");
 
     tracing::info!("app launched, listening on {}", address);
-    run(listener, pg_pool).await.unwrap();
+    run(listener, app_state).await.unwrap();
 }

@@ -64,6 +64,7 @@ impl TryFrom<String> for Environment {
 pub struct Settings {
     pub database: DatabaseSettings,
     pub application: AppSettings,
+    pub jwt_secret: String,
 }
 
 #[derive(serde::Deserialize)]

@@ -26,7 +26,12 @@ RUN apt-get update -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
+RUN chown -R ethistyle:ethistyle /app
+
 COPY --from=builder /app/target/release/ethistyle ethistyle
 COPY configuration configuration
 ENV APP_ENVIRONMENT=production
+
+USER ethistyle
+
 ENTRYPOINT [ "./ethistyle" ]

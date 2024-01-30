@@ -1,16 +1,23 @@
+use std::sync::Arc;
+
+use chrono::Utc;
 use ethistyle::{
+    application::startup::app,
+    application::telemetry::{get_subscriber, init_subscriber},
     configuration::{get_config, DatabaseSettings},
-    startup::app,
-    telemetry::{get_subscriber, init_subscriber},
+    domain::AppState,
 };
 use once_cell::sync::Lazy;
+use secrecy::Secret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use tokio::net::TcpListener;
 use uuid::Uuid;
 
+use super::mock_hasher::MockHasher;
+
 pub struct TestApp {
     pub address: String,
-    pub pg_pool: PgPool,
+    pub app_state: Arc<AppState>,
 }
 
 static TRACING: Lazy<()> = Lazy::new(|| {
@@ -34,11 +41,21 @@ pub async fn spawn_app() -> TestApp {
     config.database.name = Uuid::new_v4().to_string();
     let pg_pool = configure_database(&config.database).await;
 
-    let pg_pool_clone = pg_pool.clone();
+    let app_state = AppState {
+        db: pg_pool,
+        hasher: Arc::new(MockHasher::new()),
+        jwt_secret: Secret::new("secret".to_string()),
+    };
+    let shared_state = Arc::new(app_state);
+
+    let tmp = shared_state.clone();
     tokio::spawn(async move {
-        axum::serve(listener, app(pg_pool_clone)).await.unwrap();
+        axum::serve(listener, app(&tmp)).await.unwrap();
     });
-    TestApp { address, pg_pool }
+    TestApp {
+        address,
+        app_state: shared_state.clone(),
+    }
 }
 
 async fn configure_database(config: &DatabaseSettings) -> PgPool {
@@ -58,4 +75,25 @@ async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .await
         .expect("Failed to migrate the db");
     pg_pool
+}
+
+pub async fn spawn_app_with_user() -> TestApp {
+    let app = spawn_app().await;
+    let hash = app.app_state.hasher.hash_password("password").unwrap();
+
+    sqlx::query!(
+        r#"
+            INSERT INTO Users (id, email, username, password_hash, subscribed_at)
+            VALUES ($1, $2, $3, $4, $5)
+        "#,
+        Uuid::new_v4(),
+        "m.hamilton@nasa.gov",
+        "Margaret Hamilton",
+        hash,
+        Utc::now(),
+    )
+    .execute(&app.app_state.db)
+    .await
+    .expect("Failed to insert user into db");
+    app
 }

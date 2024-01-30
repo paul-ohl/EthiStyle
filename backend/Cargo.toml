@@ -37,6 +37,7 @@ config = { version = "0.13", default-features = false, features = ["yaml"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
 unicode-segmentation = "1.7.1"
+buildstructor = "0.5"
 
 argon2 = { version = "0.5", features = ["password-hash"] }
 validator = "0.16"

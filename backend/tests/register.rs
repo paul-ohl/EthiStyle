@@ -5,7 +5,7 @@ use helper::*;
 async fn register_returns_a_200_for_valid_form_data() {
     let test_app = spawn_app().await;
     let client = reqwest::Client::new();
-    let body = "name=Margaret Hamilton&email=m.hamilton@nasa.gov&password=secure_password";
+    let body = "name=Margaret Hamilton&email=m.hamilton@nasa.gov&password=password";
 
     let response = client
         .post(&format!("{}/register", &test_app.address))
@@ -17,12 +17,19 @@ async fn register_returns_a_200_for_valid_form_data() {
 
     assert_eq!("200", response.status().as_str());
     let saved = sqlx::query!("SELECT email, username, password_hash FROM Users")
-        .fetch_one(&test_app.pg_pool)
+        .fetch_one(&test_app.app_state.db)
         .await
         .expect("Failed to fetch from db.");
     assert_eq!("Margaret Hamilton", saved.username);
     assert_eq!("m.hamilton@nasa.gov", saved.email);
-    assert!(verify_hash(&saved.password_hash, "secure_password"));
+    assert!(
+        test_app
+            .app_state
+            .hasher
+            .verify(&saved.password_hash, "password"),
+        "Current password hash is: {}",
+        &saved.password_hash
+    );
 }
 
 #[tokio::test]
@@ -32,13 +39,10 @@ async fn register_returns_a_422_when_data_is_missing() {
     let test_cases = vec![
         ("", "missing all fields"),
         (
-            "email=m.hamilton@nasa.gov&password=secure_password",
+            "email=m.hamilton@nasa.gov&password=password",
             "missing username",
         ),
-        (
-            "name=Margaret Hamilton&password=secure_password",
-            "missing email",
-        ),
+        ("name=Margaret Hamilton&password=password", "missing email"),
         (
             "name=Margaret Hamilton&email=m.hamilton@nasa.gov",
             "missing password",

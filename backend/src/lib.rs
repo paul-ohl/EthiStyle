@@ -1,8 +1,6 @@
 #![warn(clippy::perf, clippy::pedantic)]
-#![allow(unused)]
+#![allow(unused, clippy::module_name_repetitions)]
 
 pub mod application;
 pub mod configuration;
 pub mod domain;
-pub mod startup;
-pub mod telemetry;

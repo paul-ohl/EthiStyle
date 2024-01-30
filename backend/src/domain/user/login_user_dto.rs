@@ -1,6 +1,6 @@
-use super::{email::Email, password_hash::PasswordHash};
+use super::{clear_password::ClearPassword, email::Email};
 
 pub struct LoginUserDto {
     pub email: Email,
-    pub hash: PasswordHash,
+    pub password: ClearPassword,
 }

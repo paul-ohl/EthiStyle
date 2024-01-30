@@ -1,8 +1,7 @@
-use axum::{
-    routing::{get, post},
-    Extension, Router,
-};
-use sqlx::PgPool;
+use std::sync::Arc;
+
+#[allow(unused_imports)]
+use axum::{Extension, Router};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_http::{
@@ -12,27 +11,31 @@ use tower_http::{
 };
 use tracing::Level;
 
-use crate::application::routes::{
-    health_check, protected_endpoint,
-    user::{login, register},
+use crate::{
+    application::routes::{
+        health_check, protected_endpoint,
+        user::{login, register},
+    },
+    domain::AppState,
 };
 
 /// Given a standard `TcpListener` and a valid `PgPool`, this function will initialize the axum server
 ///
 /// # Errors
 /// The `run` function will fail if the `TcpListener` can't bind to the given port
-pub async fn run(listener: TcpListener, db_pool: PgPool) -> Result<(), std::io::Error> {
-    axum::serve(listener, app(db_pool)).await
+pub async fn run(listener: TcpListener, app_state: AppState) -> Result<(), std::io::Error> {
+    let shared_state = Arc::new(app_state);
+    axum::serve(listener, app(&shared_state)).await
 }
 
 /// Used to get the app's router
-pub fn app(db_pool: PgPool) -> Router {
+pub fn app(shared_state: &Arc<AppState>) -> Router {
     Router::new()
-        .merge(login::endpoint())
-        .merge(register::endpoint())
         .merge(health_check::endpoint())
-        .merge(protected_endpoint::endpoint())
-        .layer(Extension(db_pool))
+        .merge(protected_endpoint::endpoint(shared_state))
+        .merge(login::endpoint(shared_state))
+        .merge(register::endpoint(shared_state))
+        // .layer(Extension(shared_state))
         .layer(
             // from https://docs.rs/tower-http/0.2.5/tower_http/request_id/index.html#using-trace
             ServiceBuilder::new()
