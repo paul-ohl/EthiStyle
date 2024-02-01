@@ -33,7 +33,7 @@ tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
 tracing-bunyan-formatter = "0.3"
 tracing-log = "0.2"
 
-config = { version = "0.13", default-features = false, features = ["yaml"] }
+config = { version = "0.14", default-features = false, features = ["yaml"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
 unicode-segmentation = "1.7.1"
