@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used)]
 use std::sync::Arc;
 
 use chrono::Utc;
@@ -54,7 +55,7 @@ pub async fn spawn_app() -> TestApp {
     });
     TestApp {
         address,
-        app_state: shared_state.clone(),
+        app_state: shared_state,
     }
 }
 
@@ -77,6 +78,7 @@ async fn configure_database(config: &DatabaseSettings) -> PgPool {
     pg_pool
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub async fn spawn_app_with_user() -> TestApp {
     let app = spawn_app().await;
     let hash = app.app_state.hasher.hash_password("password").unwrap();
@@ -96,4 +98,20 @@ pub async fn spawn_app_with_user() -> TestApp {
     .await
     .expect("Failed to insert user into db");
     app
+}
+
+#[allow(clippy::module_name_repetitions)]
+pub async fn spawn_app_with_logged_user() -> (TestApp, String) {
+    let test_app = spawn_app_with_user().await;
+    let client = reqwest::Client::new();
+    let body = "email=m.hamilton@nasa.gov&password=password";
+
+    let response = client
+        .post(&format!("{}/get_jwt", &test_app.address))
+        .header("Content-Type", "application/json")
+        .body(body)
+        .send()
+        .await
+        .expect("Failed to execute request.");
+    (test_app, response.text().await.unwrap())
 }

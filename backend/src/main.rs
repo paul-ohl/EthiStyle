@@ -41,5 +41,7 @@ async fn main() {
         .expect("Could not bind on port");
 
     tracing::info!("app launched, listening on {}", address);
-    run(listener, app_state).await.unwrap();
+    run(listener, app_state)
+        .await
+        .expect("Failed to run the app");
 }

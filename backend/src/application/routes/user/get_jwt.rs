@@ -1,44 +1,56 @@
 use std::sync::Arc;
 
 use axum::{
+    body::Body,
     extract::{Extension, Form},
-    http::StatusCode,
+    http::{HeaderMap, HeaderName, Request, StatusCode},
     response::IntoResponse,
     routing::post,
-    Router,
+    Json, Router,
 };
-use jwt_encoder::encode_jwt;
 use secrecy::{ExposeSecret, Secret};
+use serde::Serialize;
+use serde_json::Value;
 use sqlx::PgPool;
+use uuid::{serde::compact::serialize, Uuid};
 
 use crate::domain::{
-    jwt::{jwt_encoder, Claims, UserType},
+    jwt_claims::{JwtClaims, UserType},
     user, AppState,
 };
 
 pub fn endpoint(shared_state: &Arc<AppState>) -> Router {
     Router::new()
-        .route("/login", post(login))
+        .route("/get_jwt", post(get_jwt))
         .layer(Extension(shared_state.clone()))
 }
 
-#[derive(serde::Deserialize)]
+#[derive(Debug, serde::Deserialize)]
 struct FormData {
     email: String,
     password: String,
 }
 
-#[tracing::instrument(
-    name = "Login a user"
-    skip(form, app_state),
-    fields(
-        form.email,
-    )
-)]
-async fn login(
+#[tracing::instrument(name = "Get a JWT", skip(app_state))]
+async fn get_jwt(
     Extension(app_state): Extension<Arc<AppState>>,
-    Form(form): Form<FormData>,
+    headers: HeaderMap,
+    Json(payload): Json<Value>,
 ) -> (StatusCode, String) {
+    if let Some(auth_header) = headers.get(HeaderName::from_static("Authorization")) {
+        tracing::warn!("auth_header: {:?}", auth_header);
+        // if auth_header == "Bearer " {
+        //     return (StatusCode::UNAUTHORIZED, "No token provided".into());
+        // }
+    }
+
+    let form: FormData = match serde_json::from_value(payload) {
+        Ok(form) => form,
+        Err(err) => {
+            tracing::error!("Failed to parse form: {:?}", err);
+            return (StatusCode::BAD_REQUEST, "Failed to parse form".into());
+        }
+    };
     let user_credentials: user::LoginUserDto = match form.try_into() {
         Ok(user) => user,
         Err(error_message) => {
@@ -53,7 +65,7 @@ async fn login(
         }
     };
     let user_infos = match get_user_infos(&app_state.db, &user_credentials).await {
-        Ok(hash) => hash,
+        Ok(i) => i,
         Err(e) => match e {
             sqlx::Error::RowNotFound => {
                 tracing::error!("User not found");
@@ -71,21 +83,27 @@ async fn login(
         user_credentials.password.expose_secret(),
         user_infos.password_hash.expose_secret(),
     );
-    let jwt_claims = Claims::builder()
+    let jwt_claims = JwtClaims::builder()
+        .user_id(user_infos.id)
         .user_type(UserType::User)
         .user_name(user_infos.username)
-        .user_email(user_infos.email);
-    if let Ok(jwt) = encode_jwt(&jwt_claims.build(), app_state.jwt_secret.expose_secret()) {
-        (StatusCode::OK, jwt)
-    } else {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            "Failed encoding the JWT".into(),
+        .user_email(user_infos.email)
+        .build();
+    jwt_claims
+        .encode(app_state.jwt_secret.expose_secret())
+        .map_or_else(
+            |_| {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Failed encoding the JWT".into(),
+                )
+            },
+            |jwt| (StatusCode::OK, jwt),
         )
-    }
 }
 
 struct UserInfos {
+    id: Uuid,
     username: String,
     email: String,
     password_hash: Secret<String>,
@@ -100,7 +118,7 @@ async fn get_user_infos(
     new_subscriber: &user::LoginUserDto,
 ) -> Result<UserInfos, sqlx::Error> {
     let result = sqlx::query!(
-        "SELECT username, email, password_hash from Users WHERE email = $1",
+        "SELECT id, username, email, password_hash from Users WHERE email = $1",
         new_subscriber.email.as_ref(),
     )
     .fetch_one(pool)
@@ -111,6 +129,7 @@ async fn get_user_infos(
     })?;
 
     Ok(UserInfos {
+        id: result.id,
         username: result.username,
         email: result.email,
         password_hash: Secret::new(result.password_hash),
@@ -120,8 +139,10 @@ async fn get_user_infos(
 impl TryFrom<FormData> for user::LoginUserDto {
     type Error = String;
     fn try_from(value: FormData) -> Result<Self, Self::Error> {
-        let email = user::Email::parse(&value.email)?;
-        let password = user::ClearPassword::parse(&value.password)?;
+        let email = value.email; //.ok_or("email not provided")?;
+        let password = value.password; //.ok_or("password not provided")?;
+        let email = user::Email::parse(&email)?;
+        let password = user::ClearPassword::parse(&password)?;
         Ok(Self { email, password })
     }
 }

@@ -1,2 +1,2 @@
-pub mod login;
+pub mod get_jwt;
 pub mod register;

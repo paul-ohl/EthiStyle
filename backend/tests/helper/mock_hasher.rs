@@ -12,7 +12,7 @@ impl Hasher for MockHasher {
 }
 
 impl MockHasher {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {}
     }
 }

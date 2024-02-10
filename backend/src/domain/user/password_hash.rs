@@ -53,14 +53,14 @@ mod tests {
         let hasher = Arc::new(ArgonHasher::new());
         assert_ok!(PasswordHash::hash_string("hello-world", hasher.clone()));
         assert_ok!(PasswordHash::hash_string("hello world", hasher.clone()));
-        assert_ok!(PasswordHash::hash_string(&"a".repeat(64), hasher.clone()));
+        assert_ok!(PasswordHash::hash_string(&"a".repeat(64), hasher));
     }
 
     #[test]
     fn fail_on_empty_string() {
         let hasher = Arc::new(ArgonHasher::new());
         assert_err!(PasswordHash::hash_string("", hasher.clone()));
-        assert_err!(PasswordHash::hash_string("    ", hasher.clone()));
+        assert_err!(PasswordHash::hash_string("    ", hasher));
     }
 
     #[test]

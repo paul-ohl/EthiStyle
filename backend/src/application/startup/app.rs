@@ -14,7 +14,7 @@ use tracing::Level;
 use crate::{
     application::routes::{
         health_check, protected_endpoint,
-        user::{login, register},
+        user::{get_jwt, register},
     },
     domain::AppState,
 };
@@ -33,7 +33,7 @@ pub fn app(shared_state: &Arc<AppState>) -> Router {
     Router::new()
         .merge(health_check::endpoint())
         .merge(protected_endpoint::endpoint(shared_state))
-        .merge(login::endpoint(shared_state))
+        .merge(get_jwt::endpoint(shared_state))
         .merge(register::endpoint(shared_state))
         // .layer(Extension(shared_state))
         .layer(

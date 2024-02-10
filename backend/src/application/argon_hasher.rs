@@ -13,7 +13,7 @@ impl Default for ArgonHasher {
 
 impl ArgonHasher {
     #[must_use]
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {}
     }
 }
@@ -33,12 +33,10 @@ impl Hasher for ArgonHasher {
     }
 
     fn verify(&self, user_password: &str, db_hash: &str) -> bool {
-        if let Ok(parsed_hash) = PasswordHash::new(db_hash) {
+        PasswordHash::new(db_hash).map_or(false, |parsed_hash| {
             Argon2::default()
                 .verify_password(user_password.as_bytes(), &parsed_hash)
                 .is_ok()
-        } else {
-            false
-        }
+        })
     }
 }

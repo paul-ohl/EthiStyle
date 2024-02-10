@@ -15,10 +15,7 @@ use serde::Serialize;
 use sqlx::types::chrono;
 use tracing::{error, info, warn};
 
-use crate::domain::{
-    jwt::{decode_jwt, Claims, UserType},
-    AppState,
-};
+use crate::domain::{jwt_claims::JwtClaims, AppState};
 
 #[derive(Debug, Serialize)]
 pub struct ErrorResponse {
@@ -44,7 +41,7 @@ pub async fn auth(
         (StatusCode::NO_CONTENT, Json(json_error))
     })?;
 
-    let claims = decode_jwt(&token, &data.jwt_secret).map_err(|_| {
+    let claims = JwtClaims::decode(&token, &data.jwt_secret).map_err(|_| {
         let json_error = ErrorResponse {
             status: "fail",
             message: "Invalid token".to_string(),

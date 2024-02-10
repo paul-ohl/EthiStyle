@@ -31,7 +31,7 @@ pub fn get_config() -> Result<Settings, config::ConfigError> {
     config.try_deserialize()
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Environment {
     Dev,
     Prod,
@@ -39,10 +39,10 @@ pub enum Environment {
 
 impl Environment {
     #[must_use]
-    pub fn as_str(&self) -> &'static str {
+    pub const fn as_str(&self) -> &'static str {
         match self {
-            Environment::Dev => "dev",
-            Environment::Prod => "prod",
+            Self::Dev => "dev",
+            Self::Prod => "prod",
         }
     }
 }
@@ -110,6 +110,7 @@ impl DatabaseSettings {
     }
 }
 
+#[allow(clippy::unwrap_used)]
 #[cfg(test)]
 mod tests {
     use super::*;

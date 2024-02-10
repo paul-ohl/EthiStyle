@@ -20,3 +20,9 @@ The frontend is written in React.
 enabled to read the logs
 `docker build -t ethistyle .` in the backend directory to build the backend
 docker image
+
+## TODOS
+
+- [ ] The login route needs to become a `get_jwt` route, it has to implement both receiving credentials, or a JWT token.
+- [ ] The token id will be saved to the database and to validate that it is allowed.
+- [ ] A "log out" and a "log everything out" routes will be implemented.

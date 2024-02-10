@@ -1,3 +1,5 @@
+#![allow(clippy::unwrap_used)]
+
 mod helper;
 use helper::*;
 
@@ -61,8 +63,7 @@ async fn register_returns_a_422_when_data_is_missing() {
         assert_eq!(
             422,
             response.status().as_u16(),
-            "The API did not fail with 422 Bad Request when the payload was {}.",
-            error_message
+            "The API did not fail with 422 Bad Request when the payload was {error_message}."
         );
     }
 }
@@ -89,8 +90,7 @@ async fn register_returns_a_422_when_some_fields_are_empty() {
         assert_eq!(
             422,
             response.status().as_u16(),
-            "The API did not fail with 422 Bad Request when the payload was {}.",
-            error_message
+            "The API did not fail with 422 Bad Request when the payload was {error_message}."
         );
     }
 }

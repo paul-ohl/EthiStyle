@@ -14,6 +14,15 @@ name = "ethistyle"
 [profile.release]
 strip = true
 
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+enum_glob_use = "warn"
+pedantic = "warn"
+nursery = "warn"
+unwrap_used = "warn"
+
 [dependencies]
 # Server
 axum = "0.7"
