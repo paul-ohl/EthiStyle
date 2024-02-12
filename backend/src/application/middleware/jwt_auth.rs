@@ -25,8 +25,9 @@ pub struct ErrorResponse {
 /// Will return `StatusCode::NO_CONTENT` if no token is provided
 /// Will return `StatusCode::UNAUTHORIZED` if token is invalid
 /// Will return `StatusCode::UNAUTHORIZED` if token is expired
+#[tracing::instrument(name = "Verify JWT middleware", skip(app_state, next))]
 pub async fn auth(
-    State(data): State<Arc<AppState>>,
+    State(app_state): State<Arc<AppState>>,
     req: Request<Body>,
     next: Next,
 ) -> Result<impl IntoResponse, (StatusCode, Json<ErrorResponse>)> {
@@ -39,7 +40,7 @@ pub async fn auth(
         (StatusCode::NO_CONTENT, Json(json_error))
     })?;
 
-    let claims = JwtClaims::decode(&token, &data.jwt_secret).map_err(|_| {
+    let claims = JwtClaims::decode(&token, &app_state.jwt_secret).map_err(|_| {
         let json_error = ErrorResponse {
             status: "fail",
             message: "Invalid token".to_string(),

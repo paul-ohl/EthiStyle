@@ -9,6 +9,7 @@ use axum::{
 use secrecy::{ExposeSecret, Secret};
 use serde_json::Value;
 use sqlx::PgPool;
+use tracing::warn;
 use uuid::Uuid;
 
 use crate::domain::{
@@ -122,8 +123,8 @@ async fn get_user_infos_from_json_payload(
     let form: FormData = match serde_json::from_value(payload) {
         Ok(form) => form,
         Err(err) => {
-            tracing::error!("Failed to parse form: {:?}", err);
-            return Err(UserInfosError::BadRequest("Failed to parse form".into()));
+            tracing::error!("Failed to parse input: {:?}", err);
+            return Err(UserInfosError::BadRequest("Failed to parse input".into()));
         }
     };
     let user_credentials: user::LoginUserDto = match form.try_into() {
@@ -152,7 +153,8 @@ async fn get_user_infos_from_json_payload(
             }
         },
     };
-    if app_state.hasher.verify(
+    warn!("user_infos: {:?}", user_infos);
+    if !app_state.hasher.verify(
         user_credentials.password.expose_secret(),
         user_infos
             .password_hash
@@ -160,11 +162,13 @@ async fn get_user_infos_from_json_payload(
             .expect("The password_hash field is None, this is a critical error")
             .expose_secret(),
     ) {
+        warn!("password hashes do not match",);
         return Err(UserInfosError::Unauthorized("Invalid password".into()));
     }
     Ok(user_infos)
 }
 
+#[derive(Debug)]
 struct UserInfos {
     id: Uuid,
     username: String,
