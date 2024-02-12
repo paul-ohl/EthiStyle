@@ -1,9 +1,6 @@
-use axum::{http::StatusCode, Json};
 use chrono::Utc;
 use jsonwebtoken::{decode, DecodingKey, Validation};
-use jsonwebtoken::{Algorithm, EncodingKey, Header};
 use secrecy::{ExposeSecret, Secret};
-use tracing::warn;
 use uuid::Uuid;
 
 #[derive(Debug, serde::Serialize, serde::Deserialize, PartialEq, Eq)]
@@ -39,7 +36,7 @@ impl JwtClaims {
         let now = Utc::now();
 
         Self {
-            /// The cast is safe because the timestamp is always positive.
+            // The cast is safe because the timestamp is always positive.
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             issued_at: now.timestamp(),
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]

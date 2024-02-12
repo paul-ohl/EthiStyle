@@ -1,9 +1,5 @@
 use std::sync::Arc;
 
-use argon2::{
-    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
-    Argon2,
-};
 use secrecy::{ExposeSecret, Secret};
 use unicode_segmentation::UnicodeSegmentation;
 

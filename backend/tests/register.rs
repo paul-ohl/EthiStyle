@@ -2,16 +2,22 @@
 
 mod helper;
 use helper::*;
+use serde_json::json;
 
 #[tokio::test]
 async fn register_returns_a_200_for_valid_form_data() {
     let test_app = spawn_app().await;
     let client = reqwest::Client::new();
-    let body = "name=Margaret Hamilton&email=m.hamilton@nasa.gov&password=password";
+    let body = json!({
+        "name":"Margaret Hamilton",
+        "email":"m.hamilton@nasa.gov",
+        "password":"password"
+    })
+    .to_string();
 
     let response = client
         .post(&format!("{}/register", &test_app.address))
-        .header("Content-Type", "application/x-www-form-urlencoded")
+        .header("Content-Type", "application/json")
         .body(body)
         .send()
         .await
@@ -39,14 +45,17 @@ async fn register_returns_a_422_when_data_is_missing() {
     let test_app = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
-        ("", "missing all fields"),
+        (String::from("{}"), "missing all fields"),
         (
-            "email=m.hamilton@nasa.gov&password=password",
+            json!({"email": "m.hamilton@nasa.gov", "password": "password"}).to_string(),
             "missing username",
         ),
-        ("name=Margaret Hamilton&password=password", "missing email"),
         (
-            "name=Margaret Hamilton&email=m.hamilton@nasa.gov",
+            json!({"name": "Margaret Hamilton", "password": "password"}).to_string(),
+            "missing email",
+        ),
+        (
+            json!({"name": "Margaret Hamilton", "email": "m.hamilton@nasa.gov"}).to_string(),
             "missing password",
         ),
     ];
@@ -54,7 +63,7 @@ async fn register_returns_a_422_when_data_is_missing() {
     for (invalid_body, error_message) in test_cases {
         let response = client
             .post(&format!("{}/register", &test_app.address))
-            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Content-Type", "application/json")
             .body(invalid_body)
             .send()
             .await
@@ -73,15 +82,24 @@ async fn register_returns_a_422_when_some_fields_are_empty() {
     let test_app = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
-        ("name=pohl&email=", "email is empty"),
-        ("name=&email=pohl@p5l.fr", "name is empty"),
-        ("name=&email=", "both is empty"),
+        (
+            json!({"email": "", "name": "Margaret Hamilton"}).to_string(),
+            "email is empty",
+        ),
+        (
+            json!({"email": "m.hamilton@nasa.gov", "name": ""}).to_string(),
+            "name is empty",
+        ),
+        (
+            json!({"email": "", "name": ""}).to_string(),
+            "both are empty",
+        ),
     ];
 
     for (invalid_body, error_message) in test_cases {
         let response = client
             .post(&format!("{}/register", &test_app.address))
-            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Content-Type", "application/json")
             .body(invalid_body)
             .send()
             .await

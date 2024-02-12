@@ -1,5 +1,6 @@
 mod helper;
 use helper::*;
+use reqwest::header;
 
 #[tokio::test]
 async fn protected_endpoint_returns_200_with_a_correct_jwt() {
@@ -8,7 +9,7 @@ async fn protected_endpoint_returns_200_with_a_correct_jwt() {
 
     let response = client
         .get(&format!("{}/protected_endpoint", &test_app.address))
-        .header("Authorization", "Bearer ".to_owned() + &jwt_token)
+        .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
         .send()
         .await
         .expect("Failed to execute request.");

@@ -9,11 +9,9 @@ use axum::{
     Json,
 };
 
-use jsonwebtoken::{decode, DecodingKey, Validation};
-use secrecy::ExposeSecret;
 use serde::Serialize;
 use sqlx::types::chrono;
-use tracing::{error, info, warn};
+use tracing::info;
 
 use crate::domain::{jwt_claims::JwtClaims, AppState};
 
@@ -29,7 +27,7 @@ pub struct ErrorResponse {
 /// Will return `StatusCode::UNAUTHORIZED` if token is expired
 pub async fn auth(
     State(data): State<Arc<AppState>>,
-    mut req: Request<Body>,
+    req: Request<Body>,
     next: Next,
 ) -> Result<impl IntoResponse, (StatusCode, Json<ErrorResponse>)> {
     let token = get_jwt_header(req.headers()).ok_or_else(|| {
@@ -51,7 +49,6 @@ pub async fn auth(
     })?;
 
     let now = chrono::Utc::now().timestamp();
-    error!("time.now: {}, token.expire: {}", now, claims.expires_at);
 
     if now > claims.expires_at {
         let json_error = ErrorResponse {

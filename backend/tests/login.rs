@@ -9,7 +9,6 @@ use serde_json::json;
 async fn login_returns_a_200_for_valid_form_data() {
     let test_app = spawn_app_with_user().await;
     let client = reqwest::Client::new();
-    // let body = "email=m.hamilton@nasa.gov&password=password";
     let body = json!({
         "email": "m.hamilton@nasa.gov",
         "password": "password"
@@ -38,11 +37,19 @@ async fn login_returns_a_401_when_data_is_wrong() {
     let client = reqwest::Client::new();
     let test_cases = vec![
         (
-            "email=i.dont@exist.com&password=password",
+            json!({
+                "email": "i.dont@exist.com",
+                "password": "password"
+            })
+            .to_string(),
             "Email does not exist",
         ),
         (
-            "email=m.hamilton@nasa.gov&password=something",
+            json!({
+                "email": "m.hamilton@nasa.gov",
+                "password": "somethingWrong"
+            })
+            .to_string(),
             "Password is wrong",
         ),
     ];
@@ -50,7 +57,7 @@ async fn login_returns_a_401_when_data_is_wrong() {
     for (invalid_body, error_message) in test_cases {
         let response = client
             .post(&format!("{}/get_jwt", &test_app.address))
-            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Content-Type", "application/json")
             .body(invalid_body)
             .send()
             .await
@@ -69,15 +76,27 @@ async fn login_returns_a_400_when_data_is_missing() {
     let test_app = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
-        ("", "missing all fields"),
-        ("password=secure_password", "missing email"),
-        ("email=m.hamilton@nasa.gov", "missing password"),
+        (json!({}).to_string(), "missing all fields"),
+        (
+            json!({
+                "password": "password"
+            })
+            .to_string(),
+            "missing email",
+        ),
+        (
+            json!({
+                "email": "m.hamilton@nasa.gov",
+            })
+            .to_string(),
+            "missing password",
+        ),
     ];
 
     for (invalid_body, error_message) in test_cases {
         let response = client
             .post(&format!("{}/get_jwt", &test_app.address))
-            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Content-Type", "application/json")
             .body(invalid_body)
             .send()
             .await

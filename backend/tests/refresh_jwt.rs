@@ -3,6 +3,7 @@
 mod helper;
 use ethistyle::domain::jwt_claims::{JwtClaims, UserType};
 use helper::*;
+use reqwest::header;
 
 #[tokio::test]
 async fn refresh_jwt_returns_a_new_one_for_valid_jwt() {
@@ -12,8 +13,8 @@ async fn refresh_jwt_returns_a_new_one_for_valid_jwt() {
 
     let response = client
         .post(&format!("{}/get_jwt", &test_app.address))
-        .header("Content-Type", "application/x-www-form-urlencoded")
-        .header("Authorization ", "Bearer ".to_owned() + &jwt_token)
+        .header(header::CONTENT_TYPE, "application/json")
+        .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
         .send()
         .await
         .expect("Failed to execute request.");
