@@ -2,7 +2,7 @@ use std::{str::FromStr, sync::Arc};
 
 use axum::{
     extract::Extension,
-    http::{header, HeaderMap, StatusCode},
+    http::{header, HeaderMap, HeaderValue, StatusCode},
     routing::post,
     Json, Router,
 };
@@ -36,19 +36,7 @@ async fn get_jwt(
     payload: Option<Json<Value>>,
 ) -> (StatusCode, String) {
     let user_infos = if let Some(auth_header) = headers.get(header::AUTHORIZATION) {
-        let Ok(auth_header) = auth_header.to_str() else {
-            return (StatusCode::BAD_REQUEST, "Invalid header".into());
-        };
-        if auth_header == "Bearer " {
-            return (StatusCode::UNAUTHORIZED, "No token provided".into());
-        }
-        let Ok(jwt) = JwtClaims::decode(
-            auth_header.trim_start_matches("Bearer "),
-            &app_state.jwt_secret,
-        ) else {
-            return (StatusCode::BAD_REQUEST, "Invalid JWT formatting".into());
-        };
-        let Ok(user_infos) = get_user_infos_from_jwt(&jwt) else {
+        let Ok(user_infos) = get_user_infos_from_auth_header(auth_header, &app_state) else {
             return (StatusCode::BAD_REQUEST, "Invalid JWT".into());
         };
         user_infos
@@ -99,9 +87,24 @@ enum UserInfosError {
     InternalServerError(String),
 }
 
-fn get_user_infos_from_jwt(jwt: &JwtClaims) -> Result<UserInfos, UserInfosError> {
-    let now = chrono::Utc::now().timestamp();
+fn get_user_infos_from_auth_header(
+    auth_header: &HeaderValue,
+    app_state: &Arc<AppState>,
+) -> Result<UserInfos, UserInfosError> {
+    let Ok(auth_header) = auth_header.to_str() else {
+        return Err(UserInfosError::BadRequest("Invalid header".into()));
+    };
+    if auth_header == "Bearer " {
+        return Err(UserInfosError::Unauthorized("No token provided".into()));
+    }
+    let Ok(jwt) = JwtClaims::decode(
+        auth_header.trim_start_matches("Bearer "),
+        &app_state.jwt_secret,
+    ) else {
+        return Err(UserInfosError::BadRequest("Invalid JWT formatting".into()));
+    };
 
+    let now = chrono::Utc::now().timestamp();
     if now > jwt.expires_at {
         return Err(UserInfosError::Unauthorized("Token expired".into()));
     }
@@ -109,8 +112,8 @@ fn get_user_infos_from_jwt(jwt: &JwtClaims) -> Result<UserInfos, UserInfosError>
         .map_err(|_| UserInfosError::BadRequest("Invalid user_id in JWT".into()))?;
     let user_infos = UserInfos {
         id,
-        username: jwt.user_name.clone(),
-        email: jwt.user_email.clone(),
+        username: jwt.user_name,
+        email: jwt.user_email,
         password_hash: None,
     };
     Ok(user_infos)
