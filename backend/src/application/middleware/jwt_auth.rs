@@ -28,7 +28,7 @@ pub struct ErrorResponse {
 #[tracing::instrument(name = "Verify JWT middleware", skip(app_state, next))]
 pub async fn auth(
     State(app_state): State<Arc<AppState>>,
-    req: Request<Body>,
+    mut req: Request<Body>,
     next: Next,
 ) -> Result<impl IntoResponse, (StatusCode, Json<ErrorResponse>)> {
     let token = get_jwt_header(req.headers()).ok_or_else(|| {
@@ -59,7 +59,8 @@ pub async fn auth(
         info!("Token ({:?}) expired", token);
         return Err((StatusCode::UNAUTHORIZED, Json(json_error)));
     }
-
+    let user = claims.into_user();
+    req.extensions_mut().insert(user.clone());
     Ok(next.run(req).await)
 }
 

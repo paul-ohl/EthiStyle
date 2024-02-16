@@ -3,6 +3,8 @@ use jsonwebtoken::{decode, DecodingKey, Validation};
 use secrecy::{ExposeSecret, Secret};
 use uuid::Uuid;
 
+use super::user::CurrentUser;
+
 #[derive(Debug, serde::Serialize, serde::Deserialize, PartialEq, Eq)]
 pub enum UserType {
     // Unsigned,
@@ -23,7 +25,6 @@ pub struct JwtClaims {
     #[serde(rename = "sub")]
     pub token_id: Uuid,
 
-    /// The following fields will be empty if `user_type` is `Unsigned`.
     pub user_id: String,
     pub user_name: String,
     pub user_email: String,
@@ -32,7 +33,13 @@ pub struct JwtClaims {
 #[buildstructor::buildstructor]
 impl JwtClaims {
     #[builder(visibility = "pub")]
-    fn new(user_type: UserType, user_id: String, user_name: String, user_email: String) -> Self {
+    fn new(
+        user_type: UserType,
+        user_id: String,
+        user_name: String,
+        user_email: String,
+        expires_at: Option<i64>,
+    ) -> Self {
         let now = Utc::now();
 
         Self {
@@ -40,7 +47,8 @@ impl JwtClaims {
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             issued_at: now.timestamp(),
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            expires_at: (now + chrono::Duration::minutes(30)).timestamp(),
+            expires_at: expires_at
+                .unwrap_or_else(|| (now + chrono::Duration::minutes(30)).timestamp()),
             token_id: Uuid::new_v4(),
             user_type,
             user_id,
@@ -76,5 +84,16 @@ impl JwtClaims {
         )?
         .claims;
         Ok(claims)
+    }
+}
+
+impl JwtClaims {
+    #[must_use]
+    pub fn into_user(self) -> CurrentUser {
+        CurrentUser {
+            id: self.user_id,
+            name: self.user_name,
+            email: self.user_email,
+        }
     }
 }

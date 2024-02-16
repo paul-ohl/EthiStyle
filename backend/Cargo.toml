@@ -44,7 +44,10 @@ tracing-log = "0.2"
 
 config = { version = "0.14", default-features = false, features = ["yaml"] }
 uuid = { version = "1", features = ["v4", "serde"] }
-chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.22", default-features = false, features = [
+  "clock",
+  "serde",
+] }
 unicode-segmentation = "1.7.1"
 buildstructor = "0.5"
 
