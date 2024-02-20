@@ -1,4 +1,4 @@
-use std::{str::FromStr, sync::Arc};
+use std::sync::Arc;
 
 use axum::{
     extract::Extension,
@@ -108,10 +108,8 @@ fn get_user_infos_from_auth_header(
     if now > jwt.expires_at {
         return Err(UserInfosError::Unauthorized("Token expired".into()));
     }
-    let id = Uuid::from_str(&jwt.user_id)
-        .map_err(|_| UserInfosError::BadRequest("Invalid user_id in JWT".into()))?;
     let user_infos = UserInfos {
-        id,
+        id: jwt.user_id,
         username: jwt.user_name,
         email: jwt.user_email,
         password_hash: None,

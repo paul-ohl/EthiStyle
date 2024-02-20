@@ -10,6 +10,9 @@ use serde_json::json;
 
 use crate::domain::{AppState, ItemsModel};
 
+/// # Errors
+/// Will return `StatusCode::INTERNAL_SERVER_ERROR` if the query fails
+/// Will return `StatusCode::NOT_FOUND` if no item is found
 pub async fn get_one(
     Path(id): Path<uuid::Uuid>,
     State(data): State<Arc<AppState>>,
@@ -19,26 +22,26 @@ pub async fn get_one(
         .await;
 
     match query_result {
-        Ok(note) => {
-            let note_response = serde_json::json!({
+        Ok(item) => {
+            let item_response = serde_json::json!({
                 "status": "success",
-                "data": { "note": note }
+                "data": { "item": item }
             });
 
-            return Ok(Json(note_response));
+            Ok(Json(item_response))
+       
         }
         Err(sqlx::Error::RowNotFound) => {
             let error_response = serde_json::json!({
                 "status": "fail",
-                "message": format!("Note with ID: {} not found", id)
+                "message": format!("Item with ID: {} not found", id)
             });
-            return Err((StatusCode::NOT_FOUND, Json(error_response)));
+            Err((StatusCode::NOT_FOUND, Json(error_response)))
         }
-        Err(e) => {
-            return Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({"status": "error","message": format!("{:?}", e)})),
-            ));
-        }
-    };
+      
+        Err(e) => Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({"status": "error","message": format!("{:?}", e)})),
+        )),
+    }
 }

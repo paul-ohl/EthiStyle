@@ -10,6 +10,9 @@ use serde_json::json;
 
 use crate::domain::{AppState, ItemsModel, UpdateItemSchema};
 
+/// # Errors
+/// Will return `StatusCode::INTERNAL_SERVER_ERROR` if the query fails
+/// Will return `StatusCode::BAD_REQUEST` if the query parameter is invalid
 pub async fn edit(
     Path(id): Path<uuid::Uuid>,
     State(data): State<Arc<AppState>>,
@@ -39,14 +42,10 @@ pub async fn edit(
     let update_result = sqlx::query(
         r"UPDATE Items SET name = ?, description = ?, price = ?, is_sold = ? WHERE id = ?",
     )
-    .bind(body.name.to_owned().unwrap_or_else(|| item.name))
-    .bind(
-        body.description
-            .to_owned()
-            .unwrap_or_else(|| item.description),
-    )
-    .bind(body.price.to_owned().unwrap_or_else(|| item.price))
-    .bind(body.is_sold.to_owned().unwrap_or_else(|| item.is_sold))
+    .bind(body.name.clone().unwrap_or(item.name))
+    .bind(body.description.clone().unwrap_or(item.description))
+    .bind(body.price.unwrap_or(item.price))
+    .bind(body.is_sold.unwrap_or(item.is_sold))
     .bind(id.to_string())
     .execute(&data.db)
     .await
@@ -60,17 +59,17 @@ pub async fn edit(
     if update_result.rows_affected() == 0 {
         let error_response = serde_json::json!({
             "status": "fail",
-            "message": format!("Note with ID: {} not found", id)
+            "message": format!("Item with ID: {} not found", id)
         });
         return Err((StatusCode::NOT_FOUND, Json(error_response)));
     }
 
-    let note_response = serde_json::json!({
+    let item_response = serde_json::json!({
         "status": "success",
         "data": {
             "id": id
         }
     });
 
-    Ok(Json(note_response))
+    Ok(Json(item_response))
 }

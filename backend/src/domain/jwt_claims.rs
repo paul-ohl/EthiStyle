@@ -25,7 +25,7 @@ pub struct JwtClaims {
     #[serde(rename = "sub")]
     pub token_id: Uuid,
 
-    pub user_id: String,
+    pub user_id: Uuid,
     pub user_name: String,
     pub user_email: String,
 }
@@ -35,7 +35,7 @@ impl JwtClaims {
     #[builder(visibility = "pub")]
     fn new(
         user_type: UserType,
-        user_id: String,
+        user_id: Uuid,
         user_name: String,
         user_email: String,
         expires_at: Option<i64>,

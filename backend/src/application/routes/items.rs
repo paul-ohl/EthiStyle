@@ -14,7 +14,7 @@ use crate::{
     domain::AppState,
 };
 
-pub fn create_router(app_state: Arc<AppState>) -> Router {
+pub fn endpoints(app_state: &Arc<AppState>) -> Router {
     Router::new()
         .route("/items", get(get_all))
         .route("/items", post(create))
@@ -22,6 +22,6 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
             app_state.clone(),
             jwt_auth::auth,
         ))
-        .route("/api/items/:id", get(get_one).patch(edit).delete(delete))
-        .with_state(app_state)
+        .route("/items/:id", get(get_one).patch(edit).delete(delete))
+        .with_state(app_state.clone())
 }

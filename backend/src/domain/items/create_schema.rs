@@ -5,6 +5,6 @@ pub struct CreateItemSchema {
     pub name: String,
     pub price: f64,
     pub description: String,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub tags: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<Vec<String>>,
 }

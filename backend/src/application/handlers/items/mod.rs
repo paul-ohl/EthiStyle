@@ -1,3 +1,5 @@
+#![allow(clippy::missing_panics_doc)]
+
 pub mod create;
 pub mod delete;
 pub mod edit;

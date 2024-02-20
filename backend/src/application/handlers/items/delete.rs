@@ -10,6 +10,9 @@ use serde_json::json;
 
 use crate::domain::AppState;
 
+/// # Errors
+/// Will return `StatusCode::INTERNAL_SERVER_ERROR` if the query fails
+/// Will return `StatusCode::NOT_FOUND` if no Item is found
 pub async fn delete(
     Path(id): Path<uuid::Uuid>,
     State(data): State<Arc<AppState>>,
@@ -27,7 +30,7 @@ pub async fn delete(
     if query_result.rows_affected() == 0 {
         let error_response = serde_json::json!({
             "status": "fail",
-            "message": format!("Note with ID: {} not found", id)
+            "message": format!("Item with ID: {} not found", id)
         });
         return Err((StatusCode::NOT_FOUND, Json(error_response)));
     }
