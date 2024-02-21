@@ -41,8 +41,8 @@ pub async fn get_all(
 
     let json_response = serde_json::json!({
         "status": "success",
-        "results": items.len(),
-        "items": items
+        "length": items.len(),
+        "data": items
     });
 
     Ok(Json(json_response))

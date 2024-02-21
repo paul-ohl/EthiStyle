@@ -25,11 +25,10 @@ pub async fn get_one(
         Ok(item) => {
             let item_response = serde_json::json!({
                 "status": "success",
-                "data": { "item": item }
+                "data": item
             });
 
             Ok(Json(item_response))
-       
         }
         Err(sqlx::Error::RowNotFound) => {
             let error_response = serde_json::json!({
@@ -38,7 +37,7 @@ pub async fn get_one(
             });
             Err((StatusCode::NOT_FOUND, Json(error_response)))
         }
-      
+
         Err(e) => Err((
             StatusCode::INTERNAL_SERVER_ERROR,
             Json(json!({"status": "error","message": format!("{:?}", e)})),

@@ -15,11 +15,11 @@ use crate::domain::{AppState, ItemsModel, UpdateItemSchema};
 /// Will return `StatusCode::BAD_REQUEST` if the query parameter is invalid
 pub async fn edit(
     Path(id): Path<uuid::Uuid>,
-    State(data): State<Arc<AppState>>,
+    State(app_state): State<Arc<AppState>>,
     Json(body): Json<UpdateItemSchema>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     let query_result = sqlx::query_as!(ItemsModel, r#"SELECT * FROM Items WHERE id = $1"#, id)
-        .fetch_one(&data.db)
+        .fetch_one(&app_state.db)
         .await;
 
     let item = match query_result {
@@ -39,15 +39,18 @@ pub async fn edit(
         }
     };
 
-    let update_result = sqlx::query(
-        r"UPDATE Items SET name = ?, description = ?, price = ?, is_sold = ? WHERE id = ?",
+    let update_result = sqlx::query!(
+        r"UPDATE Items
+            SET name = $1, description = $2, price = $3, is_sold = $4
+            WHERE id = $5
+        ",
+        body.name.clone().unwrap_or(item.name),
+        body.description.clone().unwrap_or(item.description),
+        body.price.unwrap_or(item.price),
+        body.is_sold.unwrap_or(item.is_sold),
+        id,
     )
-    .bind(body.name.clone().unwrap_or(item.name))
-    .bind(body.description.clone().unwrap_or(item.description))
-    .bind(body.price.unwrap_or(item.price))
-    .bind(body.is_sold.unwrap_or(item.is_sold))
-    .bind(id.to_string())
-    .execute(&data.db)
+    .execute(&app_state.db)
     .await
     .map_err(|e| {
         (
