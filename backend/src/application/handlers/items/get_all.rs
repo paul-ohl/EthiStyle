@@ -19,8 +19,8 @@ pub async fn get_all(
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     let Query(opts) = opts.unwrap_or_default();
 
-    let limit = opts.limit.unwrap_or(10);
-    let offset = (opts.page.unwrap_or(1) - 1) * limit;
+    let limit = opts.limit.unwrap_or(20);
+    let offset = opts.offset.unwrap_or(0);
 
     #[allow(clippy::cast_possible_truncation, clippy::cast_possible_wrap)]
     let items = sqlx::query_as!(

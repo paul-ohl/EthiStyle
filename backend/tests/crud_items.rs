@@ -174,6 +174,62 @@ async fn get_all_item_works_with_no_data() {
 }
 
 #[tokio::test]
+async fn get_all_item_works_with_pagination() {
+    let (test_app, jwt_token) = spawn_app_with_logged_user().await;
+    let _ = create_item_and_get_id(&test_app, &jwt_token).await;
+    let _ = create_item_and_get_id(&test_app, &jwt_token).await;
+    let _ = create_item_and_get_id(&test_app, &jwt_token).await;
+    let _ = create_item_and_get_id(&test_app, &jwt_token).await;
+    let _ = create_item_and_get_id(&test_app, &jwt_token).await;
+    let client = reqwest::Client::new();
+
+    // Get second page with 2 items
+    let response = client
+        .get(&format!("{}/items?offset=2&limit=2", &test_app.address))
+        .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
+        .send()
+        .await
+        .expect("Failed to execute request.");
+
+    assert_eq!("200", response.status().as_str());
+    let response = response.text().await.unwrap();
+    let item: MultipleItemsResponse =
+        serde_json::from_str(&response).expect("Failed to parse response");
+    assert_eq!("success", item.status);
+    assert_eq!(2, item.length);
+
+    // Get last page with 1 item
+    let response = client
+        .get(&format!("{}/items?offset=4&limit=2", &test_app.address))
+        .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
+        .send()
+        .await
+        .expect("Failed to execute request.");
+
+    assert_eq!("200", response.status().as_str());
+    let response = response.text().await.unwrap();
+    let item: MultipleItemsResponse =
+        serde_json::from_str(&response).expect("Failed to parse response");
+    assert_eq!("success", item.status);
+    assert_eq!(1, item.length);
+
+    // Get no items with an offset that is out of range
+    let response = client
+        .get(&format!("{}/items?offset=8&limit=2", &test_app.address))
+        .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
+        .send()
+        .await
+        .expect("Failed to execute request.");
+
+    assert_eq!("200", response.status().as_str());
+    let response = response.text().await.unwrap();
+    let item: MultipleItemsResponse =
+        serde_json::from_str(&response).expect("Failed to parse response");
+    assert_eq!("success", item.status);
+    assert_eq!(0, item.length);
+}
+
+#[tokio::test]
 async fn edit_works_with_correct_data() {
     let (test_app, jwt_token) = spawn_app_with_logged_user().await;
     let item_id = create_item_and_get_id(&test_app, &jwt_token).await;
