@@ -27,7 +27,8 @@ async fn protected_endpoint_returns_200_with_a_correct_jwt() {
 async fn protected_endpoint_returns_401_with_expired_jwt() {
     let (test_app, jwt_token) = spawn_app_with_logged_user().await;
     let client = reqwest::Client::new();
-    let now = Utc::now() - chrono::Duration::seconds(1);
+    #[allow(clippy::unwrap_used)]
+    let now = Utc::now() - chrono::Duration::try_seconds(1).unwrap();
 
     let claims = JwtClaims::decode(&jwt_token, &test_app.app_state.jwt_secret).unwrap();
     let expired_claims = JwtClaims::builder()

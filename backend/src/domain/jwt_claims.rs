@@ -46,9 +46,13 @@ impl JwtClaims {
             // The cast is safe because the timestamp is always positive.
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             issued_at: now.timestamp(),
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            #[allow(
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss,
+                clippy::unwrap_used
+            )]
             expires_at: expires_at
-                .unwrap_or_else(|| (now + chrono::Duration::minutes(30)).timestamp()),
+                .unwrap_or_else(|| (now + chrono::Duration::try_minutes(30).unwrap()).timestamp()),
             token_id: Uuid::new_v4(),
             user_type,
             user_id,
