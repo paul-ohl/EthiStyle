@@ -1,5 +1,5 @@
 [package]
-name = "ethistyle"
+name = "remae"
 version = "0.1.0"
 authors = ["LukeMathWalker <rust@lpalmieri.com>"]
 edition = "2021"
@@ -9,7 +9,7 @@ path = "src/lib.rs"
 
 [[bin]]
 path = "src/main.rs"
-name = "ethistyle"
+name = "remae"
 
 [profile.release]
 strip = true

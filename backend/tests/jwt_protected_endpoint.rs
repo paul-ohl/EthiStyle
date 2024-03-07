@@ -2,8 +2,8 @@
 
 mod helper;
 use chrono::Utc;
-use ethistyle::domain::jwt_claims::JwtClaims;
 use helper::*;
+use remae::domain::jwt_claims::JwtClaims;
 use reqwest::header;
 use secrecy::ExposeSecret;
 

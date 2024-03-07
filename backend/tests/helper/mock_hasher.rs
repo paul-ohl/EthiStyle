@@ -1,4 +1,4 @@
-use ethistyle::domain::Hasher;
+use remae::domain::Hasher;
 use tracing_log::log::info;
 
 pub struct MockHasher;

@@ -14,7 +14,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 
 COPY . .
 ENV SQLX_OFFLINE=true
-RUN cargo build --release --bin ethistyle
+RUN cargo build --release --bin remae
 
 # Runtime stage, only the things in that stage will be in the final image
 FROM debian:bookworm-slim AS runtime
@@ -26,12 +26,12 @@ RUN apt-get update -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
-RUN chown -R ethistyle:ethistyle /app
+RUN chown -R remae:remae /app
 
-COPY --from=builder /app/target/release/ethistyle ethistyle
+COPY --from=builder /app/target/release/remae remae
 COPY configuration configuration
 ENV APP_ENVIRONMENT=production
 
-USER ethistyle
+USER remae
 
-ENTRYPOINT [ "./ethistyle" ]
+ENTRYPOINT [ "./remae" ]

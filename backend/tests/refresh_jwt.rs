@@ -1,8 +1,8 @@
 #![allow(clippy::unwrap_used)]
 
 mod helper;
-use ethistyle::domain::jwt_claims::{JwtClaims, UserType};
 use helper::*;
+use remae::domain::jwt_claims::{JwtClaims, UserType};
 use reqwest::header;
 
 #[tokio::test]

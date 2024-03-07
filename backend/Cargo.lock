@@ -517,39 +517,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ethistyle"
-version = "0.1.0"
-dependencies = [
- "argon2",
- "axum",
- "buildstructor",
- "chrono",
- "claims",
- "config",
- "fast_image_resize",
- "image",
- "jsonwebtoken",
- "once_cell",
- "rand_core",
- "reqwest",
- "secrecy",
- "serde",
- "serde-aux",
- "serde_json",
- "sqlx",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-bunyan-formatter",
- "tracing-log 0.2.0",
- "tracing-subscriber",
- "unicode-segmentation",
- "uuid",
- "validator",
-]
-
-[[package]]
 name = "event-listener"
 version = "2.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1793,6 +1760,39 @@ name = "regex-syntax"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
+
+[[package]]
+name = "remae"
+version = "0.1.0"
+dependencies = [
+ "argon2",
+ "axum",
+ "buildstructor",
+ "chrono",
+ "claims",
+ "config",
+ "fast_image_resize",
+ "image",
+ "jsonwebtoken",
+ "once_cell",
+ "rand_core",
+ "reqwest",
+ "secrecy",
+ "serde",
+ "serde-aux",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-bunyan-formatter",
+ "tracing-log 0.2.0",
+ "tracing-subscriber",
+ "unicode-segmentation",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "reqwest"

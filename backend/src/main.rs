@@ -2,7 +2,7 @@
 
 use std::sync::Arc;
 
-use ethistyle::{
+use remae::{
     application::startup::run,
     application::{
         telemetry::{get_subscriber, init_subscriber},
@@ -18,7 +18,7 @@ use tokio::net::TcpListener;
 #[tokio::main]
 async fn main() {
     // setup telemetry
-    let subscriber = get_subscriber("ethistyle", "info", std::io::stdout);
+    let subscriber = get_subscriber("remae", "info", std::io::stdout);
     init_subscriber(subscriber);
 
     let configuration = get_config().expect("Could not read configuration");

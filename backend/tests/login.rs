@@ -1,8 +1,8 @@
 #![allow(clippy::unwrap_used)]
 
 mod helper;
-use ethistyle::domain::jwt_claims::{JwtClaims, UserType};
 use helper::*;
+use remae::domain::jwt_claims::{JwtClaims, UserType};
 
 #[tokio::test]
 async fn login_returns_a_200_for_valid_form_data() {
