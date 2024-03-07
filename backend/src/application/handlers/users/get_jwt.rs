@@ -6,6 +6,7 @@ use axum::{
 };
 use secrecy::{ExposeSecret, Secret};
 use sqlx::PgPool;
+use validator::Validate;
 
 use crate::domain::{
     jwt_claims::{JwtClaims, UserType},
@@ -103,7 +104,7 @@ async fn get_user_infos(
 ) -> Result<UserInfos, sqlx::Error> {
     let result = sqlx::query!(
         "SELECT id, username, email, password_hash from Users WHERE email = $1",
-        new_subscriber.email.as_ref(),
+        new_subscriber.email,
     )
     .fetch_one(pool)
     .await
@@ -123,8 +124,12 @@ async fn get_user_infos(
 impl TryFrom<FormData> for user::LoginUserDto {
     type Error = String;
     fn try_from(value: FormData) -> Result<Self, Self::Error> {
-        let email = user::Email::parse(&value.email)?;
         let password = user::ClearPassword::parse(&value.password)?;
-        Ok(Self { email, password })
+        let dto = Self {
+            email: value.email,
+            password,
+        };
+        dto.validate().map_err(|e| e.to_string())?;
+        Ok(dto)
     }
 }

@@ -62,7 +62,7 @@ unicode-segmentation = "1.7.1"
 buildstructor = "0.5"
 
 argon2 = { version = "0.5", features = ["password-hash"] }
-validator = "0.16"
+validator = { version = "0.16", features = ["derive"] }
 secrecy = { version = "0.8", features = ["serde"] }
 
 jsonwebtoken = "9"

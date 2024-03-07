@@ -7,6 +7,7 @@ use axum::{
 use chrono::Utc;
 use sqlx::PgPool;
 use uuid::Uuid;
+use validator::Validate;
 
 use crate::domain::{
     user::{self, RegisterUserDto},
@@ -52,14 +53,14 @@ pub async fn register(
 impl FormData {
     #[allow(clippy::needless_pass_by_value)] // I am not talented enough to remove this allow
     fn convert_to_user_dto(&self, hasher: Arc<dyn Hasher>) -> Result<RegisterUserDto, String> {
-        let username = user::Name::parse(&self.name)?;
-        let email = user::Email::parse(&self.email)?;
         let hash = user::PasswordHash::hash_string(&self.password, hasher)?;
-        Ok(RegisterUserDto {
-            email,
-            username,
+        let dto = RegisterUserDto {
+            email: self.email.clone(),
+            username: self.name.clone(),
             hash,
-        })
+        };
+        dto.validate().map_err(|e| e.to_string())?;
+        Ok(dto)
     }
 }
 
@@ -77,8 +78,8 @@ async fn save_user(
         VALUES ($1, $2, $3, $4, $5)
         "#,
         Uuid::new_v4(),
-        new_subscriber.email.as_ref(),
-        new_subscriber.username.as_ref(),
+        new_subscriber.email,
+        new_subscriber.username,
         new_subscriber.hash.expose_secret(),
         Utc::now(),
     )
