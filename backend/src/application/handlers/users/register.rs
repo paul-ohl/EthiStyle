@@ -1,8 +1,10 @@
 use std::sync::Arc;
 
-use axum::{extract::Extension, http::StatusCode, routing::post, Json, Router};
+use axum::{
+    extract::{Extension, Form},
+    http::StatusCode,
+};
 use chrono::Utc;
-use serde_json::Value;
 use sqlx::PgPool;
 use uuid::Uuid;
 
@@ -11,31 +13,25 @@ use crate::domain::{
     AppState, Hasher,
 };
 
-pub fn endpoint(shared_state: &Arc<AppState>) -> Router {
-    Router::new()
-        .route("/register", post(register))
-        .layer(Extension(shared_state.clone()))
-}
-
 #[derive(serde::Deserialize)]
-struct FormData {
+pub struct FormData {
     email: String,
     name: String,
     password: String,
 }
 
-#[tracing::instrument(name = "Registering a new user", skip(payload, app_state))]
-async fn register(
+#[tracing::instrument(
+    name = "Registering a new user",
+    skip(form, app_state),
+    fields(
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
+    )
+)]
+pub async fn register(
     Extension(app_state): Extension<Arc<AppState>>,
-    Json(payload): Json<Value>,
+    Form(form): Form<FormData>,
 ) -> StatusCode {
-    let form: FormData = match serde_json::from_value(payload) {
-        Ok(form) => form,
-        Err(err) => {
-            tracing::error!("Failed to parse input: {:?}", err);
-            return StatusCode::BAD_REQUEST;
-        }
-    };
     let new_user_credentials = match form.convert_to_user_dto(app_state.hasher.clone()) {
         Ok(new_user) => new_user,
         Err(error_message) => {

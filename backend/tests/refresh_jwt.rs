@@ -12,8 +12,7 @@ async fn refresh_jwt_returns_a_new_one_for_valid_jwt() {
     let client = reqwest::Client::new();
 
     let response = client
-        .post(&format!("{}/get_jwt", &test_app.address))
-        .header(header::CONTENT_TYPE, "application/json")
+        .post(&format!("{}/refresh_jwt", &test_app.address))
         .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
         .send()
         .await
@@ -34,8 +33,8 @@ async fn refresh_jwt_fails_with_invalid_jwt() {
     let client = reqwest::Client::new();
 
     let response = client
-        .post(&format!("{}/get_jwt", &test_app.address))
-        .header(header::CONTENT_TYPE, "application/json")
+        .post(&format!("{}/refresh_jwt", &test_app.address))
+        .header(header::CONTENT_TYPE, "application/x-www-form-urlencoded")
         .header(header::AUTHORIZATION, "Bearer ".to_owned() + &jwt_token)
         .send()
         .await

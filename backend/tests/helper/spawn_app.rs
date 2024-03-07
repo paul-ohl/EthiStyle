@@ -10,7 +10,6 @@ use ethistyle::{
 };
 use once_cell::sync::Lazy;
 use secrecy::Secret;
-use serde_json::json;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use tokio::net::TcpListener;
 use uuid::Uuid;
@@ -105,18 +104,15 @@ pub async fn spawn_app_with_user() -> TestApp {
 pub async fn spawn_app_with_logged_user() -> (TestApp, String) {
     let test_app = spawn_app_with_user().await;
     let client = reqwest::Client::new();
-    let body = json!({
-        "email": "m.hamilton@nasa.gov",
-        "password": "password"
-    })
-    .to_string();
+    let body = "email=m.hamilton@nasa.gov&password=password";
 
     let response = client
         .post(&format!("{}/get_jwt", &test_app.address))
-        .header("Content-Type", "application/json")
+        .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
         .await
         .expect("Failed to execute request.");
+    assert!(response.status().is_success(), "Failed to login user");
     (test_app, response.text().await.unwrap())
 }

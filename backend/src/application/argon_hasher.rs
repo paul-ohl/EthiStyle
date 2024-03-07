@@ -32,10 +32,10 @@ impl Hasher for ArgonHasher {
         Ok(password_hash)
     }
 
-    fn verify(&self, user_password: &str, db_hash: &str) -> bool {
+    fn verify(&self, password_sent: &str, db_hash: &str) -> bool {
         PasswordHash::new(db_hash).map_or(false, |parsed_hash| {
             Argon2::default()
-                .verify_password(user_password.as_bytes(), &parsed_hash)
+                .verify_password(password_sent.as_bytes(), &parsed_hash)
                 .is_ok()
         })
     }
