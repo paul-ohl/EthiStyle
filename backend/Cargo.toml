@@ -1,5 +1,5 @@
 [package]
-name = "ethistyle"
+name = "remae"
 version = "0.1.0"
 authors = ["LukeMathWalker <rust@lpalmieri.com>"]
 edition = "2021"
@@ -9,7 +9,7 @@ path = "src/lib.rs"
 
 [[bin]]
 path = "src/main.rs"
-name = "ethistyle"
+name = "remae"
 
 [profile.release]
 strip = true
@@ -25,11 +25,21 @@ unwrap_used = "warn"
 
 [dependencies]
 # Server
-axum = "0.7"
+axum = { version = "0.7", features = ["multipart"] }
 # axum-extra = { version = "0.9", features = ["cookie"] }
 tokio = { version = "1", features = ["rt-multi-thread", "net", "macros"] }
 tower = "0.4"
-tower-http = { version = "0.5", features = ["trace", "request-id", "util"] }
+tower-http = { version = "0.5", features = [
+  "trace",
+  "request-id",
+  "util",
+  "fs",
+  "cors",
+] }
+
+# Image handling
+image = "0.24"
+fast_image_resize = "3"
 
 # Serialization
 serde = "1"
@@ -44,12 +54,15 @@ tracing-log = "0.2"
 
 config = { version = "0.14", default-features = false, features = ["yaml"] }
 uuid = { version = "1", features = ["v4", "serde"] }
-chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.22", default-features = false, features = [
+  "clock",
+  "serde",
+] }
 unicode-segmentation = "1.7.1"
 buildstructor = "0.5"
 
 argon2 = { version = "0.5", features = ["password-hash"] }
-validator = "0.16"
+validator = { version = "0.16", features = ["derive"] }
 secrecy = { version = "0.8", features = ["serde"] }
 
 jsonwebtoken = "9"

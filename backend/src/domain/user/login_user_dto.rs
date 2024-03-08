@@ -1,6 +1,10 @@
-use super::{clear_password::ClearPassword, email::Email};
+use validator::Validate;
 
+use super::clear_password::ClearPassword;
+
+#[derive(Validate)]
 pub struct LoginUserDto {
-    pub email: Email,
+    #[validate(email)]
+    pub email: String,
     pub password: ClearPassword,
 }

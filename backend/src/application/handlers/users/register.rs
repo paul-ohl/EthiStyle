@@ -1,41 +1,38 @@
 use std::sync::Arc;
 
-use axum::{extract::Extension, http::StatusCode, routing::post, Json, Router};
+use axum::{
+    extract::{Extension, Form},
+    http::StatusCode,
+};
 use chrono::Utc;
-use serde_json::Value;
 use sqlx::PgPool;
 use uuid::Uuid;
+use validator::Validate;
 
 use crate::domain::{
     user::{self, RegisterUserDto},
     AppState, Hasher,
 };
 
-pub fn endpoint(shared_state: &Arc<AppState>) -> Router {
-    Router::new()
-        .route("/register", post(register))
-        .layer(Extension(shared_state.clone()))
-}
-
 #[derive(serde::Deserialize)]
-struct FormData {
+pub struct FormData {
     email: String,
     name: String,
     password: String,
 }
 
-#[tracing::instrument(name = "Registering a new user", skip(payload, app_state))]
-async fn register(
+#[tracing::instrument(
+    name = "Registering a new user",
+    skip(form, app_state),
+    fields(
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
+    )
+)]
+pub async fn register(
     Extension(app_state): Extension<Arc<AppState>>,
-    Json(payload): Json<Value>,
+    Form(form): Form<FormData>,
 ) -> StatusCode {
-    let form: FormData = match serde_json::from_value(payload) {
-        Ok(form) => form,
-        Err(err) => {
-            tracing::error!("Failed to parse input: {:?}", err);
-            return StatusCode::BAD_REQUEST;
-        }
-    };
     let new_user_credentials = match form.convert_to_user_dto(app_state.hasher.clone()) {
         Ok(new_user) => new_user,
         Err(error_message) => {
@@ -56,14 +53,14 @@ async fn register(
 impl FormData {
     #[allow(clippy::needless_pass_by_value)] // I am not talented enough to remove this allow
     fn convert_to_user_dto(&self, hasher: Arc<dyn Hasher>) -> Result<RegisterUserDto, String> {
-        let username = user::Name::parse(&self.name)?;
-        let email = user::Email::parse(&self.email)?;
         let hash = user::PasswordHash::hash_string(&self.password, hasher)?;
-        Ok(RegisterUserDto {
-            email,
-            username,
+        let dto = RegisterUserDto {
+            email: self.email.clone(),
+            username: self.name.clone(),
             hash,
-        })
+        };
+        dto.validate().map_err(|e| e.to_string())?;
+        Ok(dto)
     }
 }
 
@@ -81,8 +78,8 @@ async fn save_user(
         VALUES ($1, $2, $3, $4, $5)
         "#,
         Uuid::new_v4(),
-        new_subscriber.email.as_ref(),
-        new_subscriber.username.as_ref(),
+        new_subscriber.email,
+        new_subscriber.username,
         new_subscriber.hash.expose_secret(),
         Utc::now(),
     )
