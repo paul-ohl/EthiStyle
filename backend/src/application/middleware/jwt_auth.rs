@@ -25,7 +25,7 @@ pub struct ErrorResponse {
 /// Will return `StatusCode::NO_CONTENT` if no token is provided
 /// Will return `StatusCode::UNAUTHORIZED` if token is invalid
 /// Will return `StatusCode::UNAUTHORIZED` if token is expired
-#[tracing::instrument(name = "Verify JWT middleware", skip(app_state, next))]
+#[tracing::instrument(name = "Verify JWT middleware", skip(req, app_state, next))]
 pub async fn auth(
     State(app_state): State<Arc<AppState>>,
     mut req: Request<Body>,
@@ -45,7 +45,7 @@ pub async fn auth(
             status: "fail",
             message: "Invalid token".to_string(),
         };
-        info!("Token ({:?}) invalid", token);
+        info!("Token invalid");
         (StatusCode::UNAUTHORIZED, Json(json_error))
     })?;
 
@@ -56,9 +56,10 @@ pub async fn auth(
             status: "fail",
             message: "Token expired".to_string(),
         };
-        info!("Token ({:?}) expired", token);
+        info!("Token expired");
         return Err((StatusCode::UNAUTHORIZED, Json(json_error)));
     }
+    info!("Token valid");
     let user = claims.into_user();
     req.extensions_mut().insert(user.clone());
     Ok(next.run(req).await)

@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use chrono::Utc;
 use once_cell::sync::Lazy;
+use random_user::UserGenerator;
 use remae::{
     application::startup::app,
     application::telemetry::{get_subscriber, init_subscriber},
@@ -115,4 +116,31 @@ pub async fn spawn_app_with_logged_user() -> (TestApp, String) {
         .expect("Failed to execute request.");
     assert!(response.status().is_success(), "Failed to login user");
     (test_app, response.text().await.unwrap())
+}
+
+pub async fn create_additional_user(app: &TestApp) -> Uuid {
+    let hash = app.app_state.hasher.hash_password("password").unwrap();
+
+    let generator = UserGenerator::new();
+    let new_user_id = Uuid::new_v4();
+    let new_user = generator
+        .fetch_one()
+        .await
+        .expect("Error fetching random user");
+
+    sqlx::query!(
+        r#"
+            INSERT INTO Users (id, email, username, password_hash, subscribed_at)
+            VALUES ($1, $2, $3, $4, $5)
+        "#,
+        new_user_id,
+        new_user.email,
+        new_user.login.username,
+        hash,
+        Utc::now(),
+    )
+    .execute(&app.app_state.db)
+    .await
+    .expect("Failed to insert user into db");
+    new_user_id
 }

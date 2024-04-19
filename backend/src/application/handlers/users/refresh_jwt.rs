@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::Extension,
+    extract::State,
     http::{header, HeaderMap, HeaderValue, StatusCode},
 };
 use secrecy::ExposeSecret;
@@ -14,7 +14,7 @@ use crate::domain::{
 
 #[tracing::instrument(name = "Refresh a JWT", skip(app_state))]
 pub async fn refresh_jwt(
-    Extension(app_state): Extension<Arc<AppState>>,
+    State(app_state): State<Arc<AppState>>,
     headers: HeaderMap,
 ) -> (StatusCode, String) {
     let user_infos = if let Some(auth_header) = headers.get(header::AUTHORIZATION) {
@@ -49,8 +49,8 @@ pub async fn refresh_jwt(
 }
 
 enum UserInfosError {
-    BadRequest(String),
-    Unauthorized(String),
+    BadRequest(()),
+    Unauthorized(()),
 }
 
 fn get_user_infos_from_auth_header(
@@ -58,21 +58,21 @@ fn get_user_infos_from_auth_header(
     app_state: &Arc<AppState>,
 ) -> Result<UserInfos, UserInfosError> {
     let Ok(auth_header) = auth_header.to_str() else {
-        return Err(UserInfosError::BadRequest("Invalid header".into()));
+        return Err(UserInfosError::BadRequest(())); // "Invalid header"
     };
     if auth_header == "Bearer " {
-        return Err(UserInfosError::Unauthorized("No token provided".into()));
+        return Err(UserInfosError::Unauthorized(())); // "No token provided"
     }
     let Ok(jwt) = JwtClaims::decode(
         auth_header.trim_start_matches("Bearer "),
         &app_state.jwt_secret,
     ) else {
-        return Err(UserInfosError::BadRequest("Invalid JWT formatting".into()));
+        return Err(UserInfosError::BadRequest(())); // "Invalid JWT formatting"
     };
 
     let now = chrono::Utc::now().timestamp();
     if now > jwt.expires_at {
-        return Err(UserInfosError::Unauthorized("Token expired".into()));
+        return Err(UserInfosError::Unauthorized(())); // "Token expired"
     }
     let user_infos = UserInfos {
         id: jwt.user_id,

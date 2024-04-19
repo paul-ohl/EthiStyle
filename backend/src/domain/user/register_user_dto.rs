@@ -5,7 +5,10 @@ use validator::{Validate, ValidationError};
 pub struct RegisterUserDto {
     #[validate(email)]
     pub email: String,
-    #[validate(length(min = 1, max = 256), custom = "check_invalid_characters")]
+    #[validate(
+        length(min = 1, max = 256),
+        custom(function = "check_invalid_characters")
+    )]
     pub username: String,
     pub hash: PasswordHash,
 }
