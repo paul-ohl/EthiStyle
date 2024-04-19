@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Extension, Form},
+    extract::{Form, State},
     http::StatusCode,
 };
 use secrecy::{ExposeSecret, Secret};
@@ -27,7 +27,7 @@ pub struct FormData {
     )
 )]
 pub async fn get_jwt(
-    Extension(app_state): Extension<Arc<AppState>>,
+    State(app_state): State<Arc<AppState>>,
     Form(form): Form<FormData>,
 ) -> (StatusCode, String) {
     let user_credentials: user::LoginUserDto = match form.try_into() {

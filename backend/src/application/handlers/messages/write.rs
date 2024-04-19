@@ -1,32 +1,61 @@
 use std::sync::Arc;
 
-use axum::{extract::State, http::StatusCode, response::IntoResponse, Extension, Json};
-use serde_json::json;
+use axum::{
+    extract::{Path, State},
+    http::StatusCode,
+    response::IntoResponse,
+    Extension, Json,
+};
+use serde::Deserialize;
+use serde_json::{json, Value};
 use uuid::Uuid;
 
-use crate::domain::{user::CurrentUser, AppState, CreateItemSchema};
+use crate::domain::{user::CurrentUser, AppState};
 
-#[tracing::instrument(name = "Create an Item", skip(app_state, current_user))]
+#[derive(Debug, Deserialize)]
+pub struct MessageContent {
+    content: String,
+}
+
 /// # Errors
 /// Will return `StatusCode::INTERNAL_SERVER_ERROR` if the query fails
+#[tracing::instrument(name = "Write a new message", skip(app_state, current_user))]
 pub async fn write(
-    State(app_state): State<Arc<AppState>>,
+    Path(receiver_id): Path<String>,
     Extension(current_user): Extension<CurrentUser>,
-    Json(create_schema): Json<CreateItemSchema>,
-) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
-    let new_item_id = Uuid::new_v4();
+    State(app_state): State<Arc<AppState>>,
+    Json(content): Json<MessageContent>,
+) -> Result<impl IntoResponse, (StatusCode, Json<Value>)> {
+    let receiver_id = Uuid::parse_str(receiver_id.trim()).map_err(|_e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({"status": "error","message": "Failed to read username"})),
+        )
+    })?;
+    if receiver_id == current_user.id {
+        return Ok((
+            StatusCode::BAD_REQUEST,
+            Json(json!({"status": "error","message": "You cannot send a message to yourself"})),
+        ));
+    }
+    if content.content.is_empty() {
+        return Ok((
+            StatusCode::BAD_REQUEST,
+            Json(json!({"status": "error","message": "Message cannot be empty"})),
+        ));
+    }
 
+    let new_message_id = Uuid::new_v4();
     sqlx::query!(
         r#"INSERT INTO
-            Items  (id, seller_id, name, price, description, date_added)
-            VALUES ($1, $2       , $3  , $4   , $5         , $6        )
+            Messages (id, sender_id, receiver_id, date_sent, content)
+            VALUES   ($1, $2       , $3         , $4       , $5     )
         "#,
-        new_item_id,
+        new_message_id,
         current_user.id,
-        create_schema.name.to_string(),
-        create_schema.price,
-        create_schema.description.to_string(),
+        receiver_id,
         chrono::Utc::now(),
+        content.content,
     )
     .execute(&app_state.db)
     .await
@@ -38,5 +67,6 @@ pub async fn write(
         )
     })?;
 
-    Ok((StatusCode::OK, Json(json!({"id": new_item_id}))))
+    // Ok((StatusCode::OK, Json(json!({"id": new_message_id}))))
+    Ok(((StatusCode::OK), Json(json!({"id": 0}))))
 }

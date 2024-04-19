@@ -9,5 +9,7 @@ CREATE TABLE Messages (
   FOREIGN KEY (receiver_id) REFERENCES Users(id),
 
   date_sent timestamptz NOT NULL,
-  content text NOT NULL,
+  content text NOT NULL
 );
+
+-- id, sender_id, receiver_id, date_sent, content

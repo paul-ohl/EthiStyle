@@ -8,7 +8,7 @@ use axum::{
 
 use crate::{
     application::{
-        handlers::messages::{delete_conversation, delete_message, edit, get_all, write},
+        handlers::messages::{delete_conversation, get_all, write},
         middleware::jwt_auth,
     },
     domain::AppState,
@@ -17,10 +17,13 @@ use crate::{
 pub fn endpoints(app_state: &Arc<AppState>) -> Router {
     Router::new()
         .route("/messages", get(get_all))
-        .route("/messages/:message_id", delete(delete_message).patch(edit))
+        // Maybe later... Editing and deleting sent messages
+        // .route("/messages/:message_id", delete(delete_message).patch(edit))
         .route(
             "/messages/:user_id",
-            delete(delete_conversation).post(write),
+            delete(delete_conversation)
+                // .get(get_from_user_id)
+                .post(write),
         )
         .route_layer(middleware::from_fn_with_state(
             app_state.clone(),

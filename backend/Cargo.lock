@@ -295,8 +295,10 @@ checksum = "8eaf5903dcbc0a39312feb77df2ff4c76387d591b9fc7b04a238dcf8bb62639a"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "serde",
+ "wasm-bindgen",
  "windows-targets 0.52.4",
 ]
 
@@ -1719,6 +1721,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "random_user"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d68922cbbf195f8205ce7b7171d8a360afd003221caad6f1bf285b4f8b8fe58d"
+dependencies = [
+ "chrono",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "rayon"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1806,6 +1821,7 @@ dependencies = [
  "jsonwebtoken",
  "once_cell",
  "rand_core",
+ "random_user",
  "reqwest",
  "secrecy",
  "serde",

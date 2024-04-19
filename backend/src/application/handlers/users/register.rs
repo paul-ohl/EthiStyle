@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Extension, Form},
+    extract::{Form, State},
     http::StatusCode,
 };
 use chrono::Utc;
@@ -30,7 +30,7 @@ pub struct FormData {
     )
 )]
 pub async fn register(
-    Extension(app_state): Extension<Arc<AppState>>,
+    State(app_state): State<Arc<AppState>>,
     Form(form): Form<FormData>,
 ) -> StatusCode {
     let new_user_credentials = match form.convert_to_user_dto(app_state.hasher.clone()) {

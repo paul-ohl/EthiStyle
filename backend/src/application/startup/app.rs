@@ -12,7 +12,7 @@ use tower_http::{
 use tracing::Level;
 
 use crate::{
-    application::routes::{health_check, items, protected_endpoint, users},
+    application::routes::{health_check, items, messages, protected_endpoint, users},
     domain::AppState,
 };
 
@@ -32,7 +32,7 @@ pub fn app(shared_state: &Arc<AppState>) -> Router {
         .merge(protected_endpoint::endpoint(shared_state))
         .merge(users::user_routes(shared_state))
         .merge(items::endpoints(shared_state))
-        // .layer(Extension(shared_state))
+        .merge(messages::endpoints(shared_state))
         .layer(
             // from https://docs.rs/tower-http/0.2.5/tower_http/request_id/index.html#using-trace
             ServiceBuilder::new()
