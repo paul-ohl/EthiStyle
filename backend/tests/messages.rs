@@ -33,7 +33,7 @@ async fn write_message_fails_with_wrong_data() {
     let (test_app, jwt_token) = spawn_app_with_logged_user().await;
     let other_user_id = create_additional_user(&test_app).await;
     let wrong_bodies = [
-        r#"Hi, I'm Jane coleman, What is your name on this platform???"#,
+        "Hi, I'm Jane coleman, What is your name on this platform???",
         r#"{"content": ""}"#,
     ];
     let client = reqwest::Client::new();
