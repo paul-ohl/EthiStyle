@@ -1,0 +1,9 @@
+[application]
+port = 3_000
+
+[database]
+host = "127.0.0.1"
+port = 5_432
+username = "postgres"
+password = "password"
+name = "newsletter"
