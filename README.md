@@ -25,3 +25,21 @@ docker image
 
 - [ ] The token id will be saved to the database and to validate that it is allowed.
 - [ ] A "log out" and a "log everything out" routes will be implemented.
+
+
+
+
+
+
+## Messages
+
+A user needs to be able to:
+- [ ] Starta conversation on an article
+- [ ] Send a message
+- [ ] Send an article through a message
+- [ ] Send photos
+- [ ] Give a price for the article
+- [ ] Leave the conversation
+- [ ] Block the user # Laterrrr
+- [ ] Get the list of conversations
+

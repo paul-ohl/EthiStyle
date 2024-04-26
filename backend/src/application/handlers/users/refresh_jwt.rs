@@ -18,10 +18,31 @@ pub async fn refresh_jwt(
     headers: HeaderMap,
 ) -> (StatusCode, String) {
     let user_infos = if let Some(auth_header) = headers.get(header::AUTHORIZATION) {
-        let Ok(user_infos) = get_user_infos_from_auth_header(auth_header, &app_state) else {
-            return (StatusCode::BAD_REQUEST, "Invalid JWT".into());
+        let Ok(auth_header) = auth_header.to_str() else {
+            return (StatusCode::BAD_REQUEST, "Invalid header".to_string());
         };
-        user_infos
+        if auth_header == "Bearer " {
+            return (StatusCode::UNAUTHORIZED, "No token provided".to_string());
+        }
+        let Ok(jwt) = JwtClaims::decode(
+            auth_header.trim_start_matches("Bearer "),
+            &app_state.jwt_secret,
+        ) else {
+            return (
+                StatusCode::BAD_REQUEST,
+                "Invalid JWT formatting".to_string(),
+            );
+        };
+
+        let now = chrono::Utc::now().timestamp();
+        if now > jwt.expires_at {
+            return (StatusCode::UNAUTHORIZED, "Token expired".to_string());
+        }
+        UserInfos {
+            id: jwt.user_id,
+            username: jwt.user_name,
+            email: jwt.user_email,
+        }
     } else {
         return (
             StatusCode::BAD_REQUEST,
@@ -46,40 +67,6 @@ pub async fn refresh_jwt(
             },
             |jwt| (StatusCode::OK, jwt),
         )
-}
-
-enum UserInfosError {
-    BadRequest(()),
-    Unauthorized(()),
-}
-
-fn get_user_infos_from_auth_header(
-    auth_header: &HeaderValue,
-    app_state: &Arc<AppState>,
-) -> Result<UserInfos, UserInfosError> {
-    let Ok(auth_header) = auth_header.to_str() else {
-        return Err(UserInfosError::BadRequest(())); // "Invalid header"
-    };
-    if auth_header == "Bearer " {
-        return Err(UserInfosError::Unauthorized(())); // "No token provided"
-    }
-    let Ok(jwt) = JwtClaims::decode(
-        auth_header.trim_start_matches("Bearer "),
-        &app_state.jwt_secret,
-    ) else {
-        return Err(UserInfosError::BadRequest(())); // "Invalid JWT formatting"
-    };
-
-    let now = chrono::Utc::now().timestamp();
-    if now > jwt.expires_at {
-        return Err(UserInfosError::Unauthorized(())); // "Token expired"
-    }
-    let user_infos = UserInfos {
-        id: jwt.user_id,
-        username: jwt.user_name,
-        email: jwt.user_email,
-    };
-    Ok(user_infos)
 }
 
 #[derive(Debug)]
