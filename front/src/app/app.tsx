@@ -1,9 +1,10 @@
-import { WelcomePage } from "./pages/welcome_page";
+// import { WelcomePage } from "./pages/welcome_page";
+import { Register } from "./pages/register";
 
 function App() {
   return (
     <main>
-      <WelcomePage />
+      <Register />
     </main>
   );
 }
