@@ -79,7 +79,7 @@ export function Register() {
           />
         </div>
         <div className="mt-11 mx-auto flex flex-col text-center">
-          <ButtonPrimary className="mx-auto mb-4">Etape suivante</ButtonPrimary>
+          <ButtonPrimary className="bg-cyan-800 mx-auto mb-4">Etape suivante</ButtonPrimary>
           <a href="#">Annuler</a>
         </div>
       </form>

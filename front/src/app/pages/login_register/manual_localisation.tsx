@@ -45,7 +45,19 @@ export function ManualLocalisation() {
                 </svg>
                 <p className="ml-2">Utiliser ma localisation actuelle</p>
             </div>
-            <hr className="my-3" />
+            <hr className="mt-3 mb-2" />
+            <div className="w-full justify-between flex flex-col">
+                <p className="text-base mb-2 text-gray-500 font-md">Résultat de la recherche</p>
+                <div className="flex flex-col ml-1 my-2">
+                    <div className="flex flex-row items-end">
+                        <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.7397 28.179C21.1168 25.2069 27.125 19.1347 27.125 13.5625C27.125 10.4794 25.9002 7.52249 23.7201 5.34238C21.54 3.16227 18.5831 1.9375 15.5 1.9375C12.4169 1.9375 9.45999 3.16227 7.27988 5.34238C5.09977 7.52249 3.875 10.4794 3.875 13.5625C3.875 19.1347 9.88125 25.2069 13.2603 28.179C13.8766 28.7291 14.6738 29.0332 15.5 29.0332C16.3262 29.0332 17.1234 28.7291 17.7397 28.179ZM11.625 13.5625C11.625 12.5348 12.0333 11.5492 12.76 10.8225C13.4867 10.0958 14.4723 9.6875 15.5 9.6875C16.5277 9.6875 17.5133 10.0958 18.24 10.8225C18.9667 11.5492 19.375 12.5348 19.375 13.5625C19.375 14.5902 18.9667 15.5758 18.24 16.3025C17.5133 17.0292 16.5277 17.4375 15.5 17.4375C14.4723 17.4375 13.4867 17.0292 12.76 16.3025C12.0333 15.5758 11.625 14.5902 11.625 13.5625Z" fill="#202020" />
+                        </svg>
+                        <p className="ml-2">Rue de la république</p>
+                    </div>
+                    <p className="text-base text-gray-500 mt-2 ml-1.5">69000 Lyon</p>
+                </div>
+            </div>
         </div>
     );
 }

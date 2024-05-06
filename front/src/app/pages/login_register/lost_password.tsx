@@ -10,7 +10,7 @@ enum Step {
 }
 
 export function LostPassword() {
-    let [step, setStep] = useState(Step.NewPassword);
+    const [step, setStep] = useState(Step.NewPassword);
 
     return (
         <>
@@ -104,10 +104,10 @@ function NewPassword({ setPassword }: { setPassword: (password: string) => void 
     return (
         <>
             <div className="px-5 pt-3 flex flex-col items-center w-full">
-                <h1 className="text-center font-bold text-xl my-3">Retrouver mon mot de passe</h1>
-                <h3 className="text-center text-md px-10">Entre la clé à 4 chiffres envoyé à ton numéro de téléphone</h3>
+                <h1 className="text-center font-bold text-xl my-3">Nouveau mot de passe</h1>
+                <h3 className="text-center text-md px-10">Enregistre un nouveau mot de passe pour ton compte</h3>
             </div>
-            <div className="pt-4 flex flex-col items-center w-full">
+            <div className="pt-4 flex flex-col items-center w-full mx-auto px-8">
                 <Input name="Password" setValue={setPassword} error={""} type={showPassword ? "text" : "password"}>
                     <div
                         className="cursor-pointer absolute inset-y-0 right-0 flex items-center pr-3"

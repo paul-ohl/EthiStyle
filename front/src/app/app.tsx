@@ -1,16 +1,13 @@
-// import { WelcomePage } from "./pages/welcome_page";
-// import { Register } from "./pages/register";
-// import GpsLocalisation from "./pages/gps_localisation";
-// import { Login } from "./pages/login";
-// import { ManualLocalisation } from "./pages/manual_localisation";
-import { LostPassword } from "./pages/lost_password";
+import { MainPage } from "./pages/main_page/main_page";
+import { SearchBar } from "./pages/search_tab/search_bar";
 
 function App() {
   return (
     <main>
-      <LostPassword />
+      <MainPage />
     </main>
   );
 }
 
 export default App;
+
