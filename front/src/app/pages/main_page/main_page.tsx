@@ -1,6 +1,6 @@
-import { SearchTab } from 'app/pages/search_tab/search_tab';
-import React, { useEffect, useRef } from 'react';
-import Tab from './tabs';
+import { SearchTab } from 'app/pages/search_tab/main';
+import { useState } from 'react';
+import TabBar from './tabs';
 
 export enum SelectedTab {
   Home,
@@ -11,18 +11,13 @@ export enum SelectedTab {
 }
 
 export const MainPage = () => {
-  const selectedTab = React.useRef<SelectedTab>(SelectedTab.Search);
-  const [displayedTab, setDisplayedTab] = React.useState(getTab(selectedTab.current));
-
-  useEffect(() => {
-    setDisplayedTab(getTab(selectedTab.current));
-  }, [selectedTab.current]);
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>(SelectedTab.Search);
 
   return (
     <>
-      {displayedTab}
-      <div className="absolute w-full bottom-6">
-        <Tab selectedTab={selectedTab} />
+      {getTab(selectedTab)}
+      <div className="fixed w-full bottom-6">
+        <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
       </div>
     </>
   );
