@@ -10,7 +10,7 @@ enum Step {
 }
 
 export function LostPassword() {
-    const [step, setStep] = useState(Step.NewPassword);
+    const [step, setStep] = useState(Step.EnterCode);
 
     return (
         <>
@@ -89,7 +89,7 @@ function EnterCode({ setStep }: { setStep: (step: Step) => void }) {
                 <SecretCode digitCount={4} onCodeEntered={console.log} />
             </div>
 
-            <div className="absolute mb-2 bottom-0 left-0 right-0 flex flex-col items-center">
+            <div className="relative mb-2 bottom-0 left-0 right-0 flex flex-col items-center">
                 <ButtonPrimary onClick={() => { setStep(Step.NewPassword) }} className="bg-black">Etape Suivante</ButtonPrimary>
                 <a href="#"><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
             </div>

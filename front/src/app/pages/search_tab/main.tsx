@@ -6,7 +6,7 @@ import { SearchResults } from "./results";
 
 export const SearchTab = () => {
   const [showHistory, setShowHistory] = useState(false);
-  const [searchTerms, setSearchTerms] = useState("");
+  const [searchTerms, setSearchTerms] = useState("pantalon");
 
   useEffect(() => {
     setShowHistory(false);
@@ -33,9 +33,8 @@ export const SearchTab = () => {
           setShowHistory(true);
         }}
         onSubmit={(e) => {
-          if (e.target.value !== "") {
-            setShowHistory(false);
-            setSearchTerms(e.target.value);
+          if (e && e !== "") {
+            setSearchTerms(e);
           }
         }}
       />
@@ -44,4 +43,3 @@ export const SearchTab = () => {
     </div>
   );
 }
-
