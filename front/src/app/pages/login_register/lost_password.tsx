@@ -1,4 +1,4 @@
-import { ButtonPrimary } from "components/atoms/button/button";
+import { ButtonPrimary } from "components/atoms/button";
 import Input from "components/atoms/input";
 import { SecretCode } from "components/molecules/secret_code";
 import { useState } from "react";

@@ -7,6 +7,12 @@ interface ProfilePicUploadProps {
 const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({ setValue }) => {
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
 
+  React.useEffect(() => {
+    if (selectedImage !== null) {
+      setValue(URL.createObjectURL(selectedImage));
+    }
+  }, [selectedImage, setValue]);
+
   return (
     <>
       <div className="mb-2 w-24 h-24">

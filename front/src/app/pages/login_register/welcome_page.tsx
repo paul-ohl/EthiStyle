@@ -1,4 +1,4 @@
-import Button from "components/atoms/button";
+import { ButtonPrimary } from "components/atoms/button";
 
 export function WelcomePage() {
   return (
@@ -59,7 +59,7 @@ export function WelcomePage() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod
         </h2>
-        <Button>Créer un compte</Button>
+        <ButtonPrimary>Créer un compte</ButtonPrimary>
         <p className="mb-7 mt-4 text-cyan-700">
           Tu as déjà un compte?{" "}
           <a className="font-bold underline decoration-solid" href="#">

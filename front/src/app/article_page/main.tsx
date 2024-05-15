@@ -1,6 +1,6 @@
 import { Article } from "components/atoms/Article";
 import { ArticleCard } from "components/organisms/article_card";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const ArticlePage = ({ article, setViewedArticle }: { article: Article, setViewedArticle: (article: null | Article) => void }) => {
   const [liked, setLiked] = useState(article.liked);

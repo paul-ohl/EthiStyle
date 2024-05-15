@@ -1,4 +1,4 @@
-import { ButtonPrimary } from "components/atoms/button/button";
+import { ButtonPrimary } from "components/atoms/button";
 import Input from "components/atoms/input";
 import ProfilePicUpload from "components/organisms/profile-pic-upload";
 import { useEffect, useState } from "react";

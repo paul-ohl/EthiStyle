@@ -1,4 +1,4 @@
-import { ButtonPrimary } from 'components/atoms/button/button';
+import { ButtonPrimary } from 'components/atoms/button';
 import React from 'react';
 
 const GpsLocalisation: React.FC = () => {
