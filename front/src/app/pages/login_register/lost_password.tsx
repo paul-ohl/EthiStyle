@@ -27,7 +27,7 @@ export function LostPassword() {
 
             {step === Step.ChooseMethod && <ChooseMethod setStep={setStep} />}
             {step === Step.EnterCode && <EnterCode setStep={setStep} />}
-            {step === Step.NewPassword && <NewPassword setPassword={(password) => { console.log(password) }} />}
+            {step === Step.NewPassword && <NewPassword setPassword={() => { }} />}
         </>
     );
 }

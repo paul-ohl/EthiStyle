@@ -108,9 +108,9 @@ const itemCategories = [
         "Sandales",
         "Bottes",
         "Talons",
-        "Chaussons",
         "Chaussures de sport",
-        "Chaussures de ville"
+        "Chaussures de ville",
+        "Chaussons",
       ]
     },
     {
@@ -176,9 +176,9 @@ const itemCategories = [
         "Sandales",
         "Bottes",
         "Rangers",
-        "Chaussons",
         "Chaussures de sport",
-        "Chaussures de ville"
+        "Chaussures de ville",
+        "Chaussons",
       ]
     },
     {
@@ -230,9 +230,8 @@ const itemCategories = [
         "Sandales",
         "Bottes",
         "Talons",
-        "Chaussons",
         "Chaussures de sport",
-        "Chaussures de ville"
+        "Chaussures de ville",
       ]
     },
     {

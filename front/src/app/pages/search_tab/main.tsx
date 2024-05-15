@@ -6,7 +6,7 @@ import { SearchResults } from "./results";
 
 export const SearchTab = () => {
   const [showHistory, setShowHistory] = useState(false);
-  const [searchTerms, setSearchTerms] = useState("pantalon");
+  const [searchTerms, setSearchTerms] = useState("");
 
   useEffect(() => {
     setShowHistory(false);

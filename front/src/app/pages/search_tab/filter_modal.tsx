@@ -59,7 +59,7 @@ export const FilterModal = ({ setDisplayFilters }: { setDisplayFilters: Dispatch
             </div>
             <RadioButtons
               options={['Le plus liké', 'Le plus récent', '+ cher au - cher', '- cher au + cher']}
-              onChange={(value) => console.log(value)}
+              onChange={() => { }}
             />
           </div>
         </div>
