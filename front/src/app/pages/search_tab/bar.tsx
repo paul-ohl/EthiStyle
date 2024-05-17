@@ -13,7 +13,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onSubmit }) => {
         const element = (e.target as HTMLFormElement).search.value;
         onSubmit(element);
       }}
-      className="relative rounded-full"
+      className="my-4 relative rounded-full"
     >
       <div className="absolute inset-y-0 left-3 flex items-center">
         <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onSubmit }) => {
         type="text"
         name="search"
         id="search"
-        className="block w-full rounded-full border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100"
+        className="font-poppins block w-full rounded-full border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100"
         placeholder="Rechercher"
         onFocus={onFocus}
       />

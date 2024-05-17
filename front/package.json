@@ -38,6 +38,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.0.3",
     "@heroicons/react": "2.0.18",
     "caniuse-lite": "^1.0.30001612",
     "classnames": "^2.5.1",

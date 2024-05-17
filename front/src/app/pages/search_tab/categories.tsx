@@ -25,7 +25,7 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ setSearchTerms }) 
 
   return (
     <>
-      <div className="relative flex flex-row justify-between w-full border-b py-3 items-center">
+      <div className="font-tenor relative flex flex-row justify-between w-full border-b py-3 items-center">
         <div className={tabClasses}>
           <div className="w-2 h-2 bg-black transform rotate-45 translate-y-1"></div>
         </div>
@@ -56,7 +56,7 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ setSearchTerms }) 
               onClick={() => setSelectedCategory(selectedCategory === category.name ? "" : category.name)}
             >
               <img src={category.pic} className="w-9 h-9 rounded object-cover mr-2" />
-              <h3 className="font-bold text-lg mt-1">{category.name}</h3>
+              <h3 className="font-semibold font-raleway text-lg mt-1">{category.name}</h3>
               <div className={"absolute right-1 top-2.5 transition-transform " + (selectedCategory === category.name ? "-rotate-90" : "rotate-90")}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -68,7 +68,7 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ setSearchTerms }) 
                 {category.subCategories.map((subCategory) => (
                   <button
                     key={subCategory}
-                    className="p-1.5 m-1 rounded ring-2 ring-gray-300 text-center"
+                    className="font-raleway font-semibold p-1.5 m-1 rounded ring-2 ring-gray-300 text-center"
                     onClick={() => { setSearchTerms(subCategory) }}
                   >
                     <p>{subCategory}</p>

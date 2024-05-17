@@ -19,10 +19,10 @@ export function ArticleCard(
           </svg>
         </button>
       </div>
-      <p>{article.name}</p>
-      <div className="flex flex-row justify-between">
+      <p className="font-tenor">{article.name}</p>
+      <div className="flex flex-row justify-between font-tenor">
         <p className="text-gray-500">{article.size}</p>
-        <p className="text-orange-400">{article.price}E</p>
+        <p className="text-orange-400">{article.price.toFixed(2)}€</p>
       </div>
     </a>
   );

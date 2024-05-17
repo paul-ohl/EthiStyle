@@ -1,6 +1,7 @@
 import { SearchTab } from 'app/pages/search_tab/main';
 import { useState } from 'react';
 import TabBar from './tabs';
+import { Profile } from 'app/profile_page/profile';
 
 export enum SelectedTab {
   Home,
@@ -11,7 +12,7 @@ export enum SelectedTab {
 }
 
 export const MainPage = () => {
-  const [selectedTab, setSelectedTab] = useState<SelectedTab>(SelectedTab.Search);
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>(SelectedTab.Profile);
 
   return (
     <>
@@ -27,7 +28,7 @@ const getTab = (selectedTab: SelectedTab) => {
   switch (selectedTab) {
     case SelectedTab.Home:
       // return <Home />;
-      return <p>Home</p>;
+      return <p className='text-center w-full mt-36 text-xl font-raleway'>Home</p>;
     case SelectedTab.Search:
       return <SearchTab />;
     case SelectedTab.Add:
@@ -37,7 +38,6 @@ const getTab = (selectedTab: SelectedTab) => {
       return <p>Notifications</p>;
     // return <Notifications />;
     case SelectedTab.Profile:
-      return <p>Profile</p>;
-    // return <Profile />;
+      return <Profile />;
   }
 }

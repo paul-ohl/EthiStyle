@@ -26,7 +26,6 @@ const Input: React.FC<InputProps> = ({ setValue, name, error, type = 'text', chi
                 placeholder={name}
                 aria-invalid="true"
                 aria-describedby="email-error"
-                autoFocus
                 onBlur={(e) => {
                     setValue(e.target.value);
                 }}

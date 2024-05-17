@@ -15,9 +15,9 @@ export const SearchHistory: React.FC<HistoryProps> = ({ setSearchTerms }) => {
   return (
     <div>
       <div className="flex justify-between py-3">
-        <p className="text-lg font-bold">Récent</p>
+        <p className="text-lg font-raleway font-bold">Récent</p>
         <button
-          className="font-bold text-gray-600"
+          className="font-bold font-raleway text-gray-600"
           onClick={() => setHistory([])}
         >
           Tout supprimer
@@ -26,7 +26,7 @@ export const SearchHistory: React.FC<HistoryProps> = ({ setSearchTerms }) => {
       <hr />
       {history.map((searchTerm) => (
         <div key={searchTerm} className="flex justify-between py-2">
-          <button onClick={() => setSearchTerms(searchTerm)} className="text-gray-600">{searchTerm}</button>
+          <button onClick={() => setSearchTerms(searchTerm)} className="text-gray-600 font-poppins">{searchTerm}</button>
           <button onClick={() => setHistory(history.filter((e) => e !== searchTerm))} >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 21.1429C17.0495 21.1429 21.1429 17.0495 21.1429 12C21.1429 6.95057 17.0495 2.85718 12 2.85718C6.95057 2.85718 2.85718 6.95057 2.85718 12C2.85718 17.0495 6.95057 21.1429 12 21.1429Z" stroke="#707070" strokeWidth="0.952381" strokeLinecap="round" strokeLinejoin="round" />

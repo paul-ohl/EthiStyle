@@ -1,21 +1,20 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   content: ["./src/**/*.tsx", "./src/**/*.css"],
   plugins: [
     require("@tailwindcss/forms"),
   ],
-  // theme: {
-  //   colors: {
-  //     'blue': '#1fb6ff',
-  //     'pink': '#ff49db',
-  //     'orange': '#ff7849',
-  //     'green': '#13ce66',
-  //     'gray-dark': '#273444',
-  //     'gray': '#8492a6',
-  //     'gray-light': '#d3dce6',
-  //   },
-  //   fontFamily: {
-  //     sans: ['Graphik', 'sans-serif'],
-  //     serif: ['Merriweather', 'serif'],
-  //   },
-  // },
+  theme: {
+    extend: {
+      colors: {
+        'remae': '#94b882',
+      },
+      fontFamily: {
+        'tenor': ['Tenor Sans', 'sans-serif'],
+        'raleway': ['Raleway', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
+      },
+    }
+  },
 };
