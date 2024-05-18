@@ -12,7 +12,7 @@ export enum SelectedTab {
 }
 
 export const MainPage = () => {
-  const [selectedTab, setSelectedTab] = useState<SelectedTab>(SelectedTab.Profile);
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>(SelectedTab.Search);
 
   return (
     <>

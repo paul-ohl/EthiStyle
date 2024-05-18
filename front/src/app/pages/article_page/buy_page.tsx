@@ -43,7 +43,7 @@ export const BuyPage = (
         <HorizontalSeparator className="my-4" />
         <div className="flex flex-row">
           <img className="w-20 object-cover" src="https://www.logo.wine/a/logo/Mastercard/Mastercard-Logo.wine.svg" />
-          <p className="text-md text-gray-700">Master Card ******39</p>
+          <p className="text-md text-gray-700 translate-y-3">Master Card ******39</p>
         </div>
         <HorizontalSeparator className="my-4" />
         <div className="relative w-full">
