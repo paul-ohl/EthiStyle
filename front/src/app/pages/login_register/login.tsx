@@ -32,14 +32,14 @@ export function Login() {
                 <path d="M201.008 266.329C161.149 422.443 -19.5441 258.169 -61.2191 155.02C-102.894 51.8713 -53.0593 -65.5318 50.0897 -107.207C153.239 -148.882 237.498 -79.7027 282.998 11.2973C328.498 102.297 240.867 110.215 201.008 266.329Z" fill="#F2F5FE" />
             </svg>
             <svg className="absolute right-0 top-56" width="84" height="138" viewBox="0 0 84 138" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M43.568 131.879C-4.23079 159.118 -6.7409 75.772 8.70952 41.0698C24.1599 6.36764 64.8167 -9.23903 99.5189 6.21139C134.221 21.6618 149.828 62.3185 134.377 97.0207C118.927 131.723 91.3667 104.641 43.568 131.879Z" fill="#D9D9D9" />
+                <path d="M43.568 131.879C-4.23079 159.118 -6.7409 75.772 8.70952 41.0698C24.1599 6.36764 64.8167 -9.23903 99.5189 6.21139C134.221 21.6618 149.828 62.3185 134.377 97.0207C118.927 131.723 91.3667 104.641 43.568 131.879Z" fill="#92b5c2" />
             </svg>
             <svg className="absolute bottom-0 right-0 -z-20" width="254" height="350" viewBox="0 0 254 350" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M393.592 235.647C487.561 366.529 245.573 399.355 139.768 364.976C33.9634 330.598 -23.9395 216.958 10.4386 111.153C44.8167 5.34777 151.971 -14.7308 250.928 8.90784C349.885 32.5465 299.623 104.765 393.592 235.647Z" fill="#F2F5FE" />
             </svg>
 
-            <div className="bottom-0 left-0 right-0 absolute px-5 mb-24">
-                <h1 className="text-4xl font-extrabold w-1/2 mb-4">Connexion</h1>
+            <div className="bottom-0 left-0 right-0 font-poppins absolute px-5 mb-24">
+                <h1 className="text-3xl font-poppins font-extrabold w-1/2 mb-4">Connexion</h1>
                 <h3 className="text-base mb-4">C'est bon de te revoir!</h3>
                 <form className="mx-2">
                     <Input name="Email" setValue={setEmail} error={emailError} type="email" />
@@ -63,12 +63,12 @@ export function Login() {
                             </svg>
                         </div>
                     </Input>
-                    <p className="text-center mb-4 text-gray-500">Tu as oublié ton <a href="#" className="underline decoration-black">mot de passe ?</a></p>
+                    <p className="text-center mb-4 text-gray-500">Tu as oublié ton <a href="/lost-password" className="underline decoration-black">mot de passe ?</a></p>
                     <div className="mt-11 mx-auto flex flex-col text-center">
-                        <button className="w-3/4 bg-black mx-auto mb-4 text-white text-xl leading-6 font-medium py-3 px-6 border border-transparent rounded-full focus:outline-none transition-colors" onClick={() => { }}>
+                        <button disabled={true} className="w-3/4 bg-cyan-800 mx-auto mb-4 text-white text-xl leading-6 font-medium py-3 px-6 border border-transparent rounded-full focus:outline-none transition-colors" onClick={() => { }}>
                             Me connecter
                         </button>
-                        <a href="#">Annuler</a>
+                        <a href="/">Annuler</a>
                     </div>
                 </form>
             </div>

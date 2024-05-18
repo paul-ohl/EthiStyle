@@ -28,7 +28,7 @@ export function Register() {
   return (
     <>
       <svg className="absolute top-0 right-0 -z-10" width="101" height="267" viewBox="0 0 101 267" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M122.93 23.9735C180.448 -54.2613 244.329 78.3253 244.329 145.372C244.329 212.418 189.977 266.77 122.93 266.77C55.8841 266.77 -7.31637 215.724 1.53226 145.372C10.3809 75.02 65.4133 102.208 122.93 23.9735Z" fill="#D9D9D9" />
+        <path d="M122.93 23.9735C180.448 -54.2613 244.329 78.3253 244.329 145.372C244.329 212.418 189.977 266.77 122.93 266.77C55.8841 266.77 -7.31637 215.724 1.53226 145.372C10.3809 75.02 65.4133 102.208 122.93 23.9735Z" fill="#92b5c2" />
       </svg>
       <svg className="absolute top-0 left-0 -z-10" width="237" height="213" viewBox="0 0 237 213" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M158.205 157.191C125.183 286.524 -36.9373 161.1 -59.0377 64.9774C-81.1382 -31.1454 -52.2778 -117.739 33.1762 -152.265C118.63 -186.791 188.434 -129.479 226.129 -54.0902C263.823 21.299 191.226 27.8587 158.205 157.191Z" fill="#F9F3E4" />
@@ -80,7 +80,7 @@ export function Register() {
         </div>
         <div className="mt-11 mx-auto flex flex-col text-center">
           <ButtonPrimary className="bg-cyan-800 mx-auto mb-4">Etape suivante</ButtonPrimary>
-          <a href="#">Annuler</a>
+          <a href="/">Annuler</a>
         </div>
       </form>
     </>

@@ -51,18 +51,21 @@ export function WelcomePage() {
           </svg>
         </div>
       </div>
-      <div className="flex-shrink-0 flex flex-col items-center w-5/6 mx-auto">
+      <div className="font-poppins flex-shrink-0 flex flex-col items-center w-5/6 mx-auto">
         <h1 className="mb-3 text-2xl text-center">
           Achète et vend de façon écoresponsable
         </h1>
-        <h2 className="mb-5 text-center text-gray-600">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod
+        <h2 className="mb-5 text-center text-sm text-gray-600">
+          Aucun compromis sur la mode. <br />
+          Aucun compromis sur la planète. <br />
+          Aucun compromis sur ton style. <br />
         </h2>
-        <ButtonPrimary>Créer un compte</ButtonPrimary>
+        <div className="w-full px-3">
+          <ButtonPrimary onClick={() => { window.location.assign("/register") }} className="bg-cyan-800">Créer un compte</ButtonPrimary>
+        </div>
         <p className="mb-7 mt-4 text-cyan-700">
           Tu as déjà un compte?{" "}
-          <a className="font-bold underline decoration-solid" href="#">
+          <a className="font-bold text-sm underline decoration-solid" href="/login">
             Se connecter
           </a>
         </p>

@@ -1,4 +1,5 @@
-import { MainPage } from "./pages/main_page/main_page";
+import { AuthProvider } from "./provider/auth_provider";
+import { Routes } from "./routes";
 
 function App() {
   // Redirect to not-mobile page if the user is on a desktop
@@ -14,7 +15,9 @@ function App() {
   });
   return (
     <main>
-      <MainPage />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </main>
   );
 }

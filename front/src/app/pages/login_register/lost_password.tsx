@@ -9,8 +9,15 @@ enum Step {
     NewPassword,
 }
 
+enum RecoveryMethod {
+    SMS = 0,
+    EMAIL = 1,
+}
+
 export function LostPassword() {
-    const [step, setStep] = useState(Step.EnterCode);
+    const [step, setStep] = useState(Step.ChooseMethod);
+
+    const [recoveryMethod, setRecoveryMethod] = useState(RecoveryMethod.SMS);
 
     return (
         <>
@@ -25,79 +32,77 @@ export function LostPassword() {
                 <img src="https://randomuser.me/api/portraits/women/43.jpg" className="rounded-full shadow-md shadow-gray-600 w-24 h-24" />
             </div>
 
-            {step === Step.ChooseMethod && <ChooseMethod setStep={setStep} />}
-            {step === Step.EnterCode && <EnterCode setStep={setStep} />}
-            {step === Step.NewPassword && <NewPassword setPassword={() => { }} />}
+            {step === Step.ChooseMethod && <ChooseMethod setStep={setStep} recoveryMethod={recoveryMethod} setRecoveryMethod={setRecoveryMethod} />}
+            {step === Step.EnterCode && <EnterCode recoveryMethod={recoveryMethod} setStep={setStep} />}
+            {step === Step.NewPassword && <NewPassword setStep={setStep} setPassword={() => { }} />}
         </>
     );
 }
 
-function ChooseMethod({ setStep }: { setStep: (step: Step) => void }) {
-    // enum RecoveryOption {
-    //     SMS = 0,
-    //     EMAIL = 1,
-    // }
-
-    // const [selectedOption, setSelectedOption] = useState(RecoveryOption.SMS);
-
+function ChooseMethod(
+    { setStep, recoveryMethod, setRecoveryMethod }:
+        { setStep: (step: Step) => void, recoveryMethod: RecoveryMethod, setRecoveryMethod: (recoveryMethod: RecoveryMethod) => void }
+) {
     return (
         <>
-            <div className="px-5 pt-3 flex flex-col items-center w-full">
+            <div className="px-5 font-raleway pt-3 flex flex-col items-center w-full">
                 <h1 className="text-center font-bold text-xl my-3">Retrouver mon mot de passe</h1>
                 <h3 className="text-center text-md px-10">Comment est-ce que tu veux réinitialiser ton mot de passe ?</h3>
                 <fieldset className="w-4/5">
                     <div>
-                        <div className="relative flex justify-between py-2 px-4 my-3 mx-10 rounded-full bg-gray-300">
+                        <div onClick={() => setRecoveryMethod(RecoveryMethod.SMS)} className="relative flex justify-between py-2 px-4 my-3 mx-10 rounded-full bg-gray-300">
                             <div className="ml-3 h-6 items-center invisible">
                             </div>
                             <div className="min-w-0 text-sm leading-6">
                                 <label htmlFor="method-sms" className="select-none font-bold text-gray-900">SMS</label>
                             </div>
                             <div className="ml-3 h-6 items-center">
-                                <input id="method-sms" name="plan" type="radio" checked className="h-4 w-4 border-gray-300 text-black focus:ring-gray-600" />
+                                <input id="method-sms" name="plan" type="radio" checked={(recoveryMethod == RecoveryMethod.SMS)} className="h-4 w-4 border-gray-300 text-black focus:ring-gray-600" />
                             </div>
                         </div>
-                        <div className="relative flex justify-between py-2 px-4 my-3 mx-10 rounded-full bg-gray-300">
+                        <div onClick={() => setRecoveryMethod(RecoveryMethod.EMAIL)} className="relative flex justify-between py-2 px-4 my-3 mx-10 rounded-full bg-gray-300">
                             <div className="ml-3 h-6 items-center invisible">
                             </div>
                             <div className="min-w-0 text-sm leading-6">
                                 <label htmlFor="method-email" className="select-none font-bold text-gray-900">Email</label>
                             </div>
                             <div className="ml-3 h-6 items-center">
-                                <input id="method-email" name="plan" type="radio" className="h-4 w-4 border-gray-300 text-black focus:ring-gray-600" />
+                                <input id="method-email" name="plan" type="radio" checked={(recoveryMethod == RecoveryMethod.EMAIL)} className="h-4 w-4 border-gray-300 text-black focus:ring-gray-600" />
                             </div>
                         </div>
                     </div>
                 </fieldset>
             </div>
 
-            <div className="absolute mb-24 bottom-0 left-0 right-0 flex flex-col items-center">
-                <ButtonPrimary onClick={() => { setStep(Step.EnterCode) }} className="bg-black">Etape Suivante</ButtonPrimary>
-                <a href="#"><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
+            <div className="absolute mb-24 bottom-0 left-5 right-5 flex flex-col items-center">
+                <ButtonPrimary onClick={() => { setStep(Step.EnterCode) }} className="bg-cyan-800">Etape Suivante</ButtonPrimary>
+                <a href="/"><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
             </div>
         </>
     );
 }
 
-function EnterCode({ setStep }: { setStep: (step: Step) => void }) {
+function EnterCode({ setStep, recoveryMethod }: { setStep: (step: Step) => void, recoveryMethod: RecoveryMethod }) {
     return (
         <>
             <div className="px-5 pt-3 flex flex-col items-center w-full">
                 <h1 className="text-center font-bold text-xl my-3">Retrouver mon mot de passe</h1>
-                <h3 className="text-center text-md px-10">Entre la clé à 4 chiffres envoyé à ton numéro de téléphone</h3>
-                <h2 className="text-center font-bold text-md my-5 px-10">+33 6 5* ** ** 78</h2>
+                <h3 className="text-center text-md px-10">
+                    Entre la clé à 4 chiffres envoyée {(recoveryMethod == RecoveryMethod.SMS) ? "à ton numéro de téléphone" : "sur ton email"}
+                </h3>
+                <h2 className="text-center font-bold text-md my-5 px-10">{(recoveryMethod === RecoveryMethod.SMS) ? "+33 6 5* ** ** 78" : "manon******@gmail.com"}</h2>
                 <SecretCode digitCount={4} onCodeEntered={console.log} />
             </div>
 
-            <div className="relative mb-2 bottom-0 left-0 right-0 flex flex-col items-center">
-                <ButtonPrimary onClick={() => { setStep(Step.NewPassword) }} className="bg-black">Etape Suivante</ButtonPrimary>
-                <a href="#"><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
+            <div className="relative mb-2 p-5 flex flex-col items-center">
+                <ButtonPrimary onClick={() => { setStep(Step.NewPassword) }} className="bg-cyan-800">Etape Suivante</ButtonPrimary>
+                <a onClick={() => { setStep(Step.ChooseMethod) }}><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
             </div>
         </>
     );
 }
 
-function NewPassword({ setPassword }: { setPassword: (password: string) => void }) {
+function NewPassword({ setPassword, setStep }: { setStep: (step: Step) => void, setPassword: (password: string) => void }) {
     // const [passwordError, setPasswordError] = useState<string>("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -150,9 +155,9 @@ function NewPassword({ setPassword }: { setPassword: (password: string) => void 
                 </Input>
             </div>
 
-            <div className="absolute mb-2 bottom-0 left-0 right-0 flex flex-col items-center">
-                <ButtonPrimary onClick={() => { }} className="bg-black">Enregistrer</ButtonPrimary>
-                <a href="#"><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
+            <div className="relative mt-2 p-5 flex flex-col items-center">
+                <ButtonPrimary onClick={() => { }} className="bg-cyan-800">Enregistrer</ButtonPrimary>
+                <a onClick={() => { setStep(Step.ChooseMethod) }}><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
             </div>
         </>
     );
