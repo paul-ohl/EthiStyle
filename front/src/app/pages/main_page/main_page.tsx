@@ -15,12 +15,12 @@ export const MainPage = () => {
   const [selectedTab, setSelectedTab] = useState<SelectedTab>(SelectedTab.Search);
 
   return (
-    <>
+    <div>
       {getTab(selectedTab)}
       <div className="fixed w-full bottom-6">
         <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
       </div>
-    </>
+    </div>
   );
 }
 
@@ -32,10 +32,10 @@ const getTab = (selectedTab: SelectedTab) => {
     case SelectedTab.Search:
       return <SearchTab />;
     case SelectedTab.Add:
-      return <p>Add</p>;
+      return <p className='text-center w-full mt-36 text-xl font-raleway'>Add</p>;
     // return <Add />;
     case SelectedTab.Notifications:
-      return <p>Notifications</p>;
+      return <p className='text-center w-full mt-36 text-xl font-raleway'>Notifications</p>;
     // return <Notifications />;
     case SelectedTab.Profile:
       return <Profile />;

@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { WelcomePage } from "app/pages/login_register/welcome_page";
 import { LostPassword } from "app/pages/login_register/lost_password";
 import { LoginRoute } from "./login";
+import { MainPage } from "app/pages/main_page/main_page";
 
 export const Routes = () => {
   const { token } = useAuth();
@@ -42,7 +43,7 @@ export const Routes = () => {
       children: [
         {
           path: "/",
-          element: <h1>Protected Home</h1>,
+          element: <MainPage />,
         },
         {
           path: "/settings",

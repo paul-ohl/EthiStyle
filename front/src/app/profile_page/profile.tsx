@@ -7,7 +7,7 @@ export function Profile() {
   return (
     <div>
       <div className="relative m-3 mt-5">
-        <img className="absolute top-0 left-0 w-12 h-12 rounded-full ring-white ring-1 shadow-gray-500" src="https://picsum.photos/200/300?random=1" />
+        <img className="absolute top-0 left-0 w-12 h-12 rounded-full ring-white ring-1 shadow-gray-500" src="./images/person.jpg" />
         <div className="ml-16 flex-row flex">
           <p className="text-lg">Alice Gilbert</p>
           <p className="text-xs bg-lime-600 text-white rounded-full ml-2 pt-1.5 px-1.5">Super-Green</p>

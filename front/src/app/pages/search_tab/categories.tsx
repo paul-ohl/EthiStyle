@@ -25,7 +25,7 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ setSearchTerms }) 
 
   return (
     <>
-      <div className="font-tenor relative flex flex-row justify-between w-full border-b py-3 items-center">
+      <div className="font-tenor relative flex flex-row justify-between w-full border-b py-3 items-center mb-4">
         <div className={tabClasses}>
           <div className="w-2 h-2 bg-black transform rotate-45 translate-y-1"></div>
         </div>
@@ -50,21 +50,21 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ setSearchTerms }) 
       </div>
       <div className="flex flex-col w-full">
         {itemCategories[selectedCustomerType].map((category) => (
-          <div key={category.name}>
+          <div className="my-1" key={category.name}>
             <div
-              className="relative flex w-full shadow-md rounded p-1 my-1"
+              className="relative flex w-full shadow-md ring-gray-100 ring-1 rounded p-1 my-1"
               onClick={() => setSelectedCategory(selectedCategory === category.name ? "" : category.name)}
             >
-              <img src={category.pic} className="w-9 h-9 rounded object-cover mr-2" />
-              <h3 className="font-semibold font-raleway text-lg mt-1">{category.name}</h3>
-              <div className={"absolute right-1 top-2.5 transition-transform " + (selectedCategory === category.name ? "-rotate-90" : "rotate-90")}>
+              <img src={category.pic} className="w-12 h-12 rounded object-cover mr-2" />
+              <h3 className="font-semibold font-raleway text-xl mt-2">{category.name}</h3>
+              <div className={"absolute right-3 top-4 transition-transform " + (selectedCategory === category.name ? "-rotate-90" : "rotate-90")}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                 </svg>
               </div>
             </div>
             {selectedCategory === category.name && (
-              <div className="grid grid-cols-2">
+              <div className="py-4 grid grid-cols-2 gap-1">
                 {category.subCategories.map((subCategory) => (
                   <button
                     key={subCategory}
