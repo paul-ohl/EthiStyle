@@ -29,7 +29,7 @@ export function LostPassword() {
             </svg>
 
             <div className="px-5 pt-20 flex flex-col items-center w-full">
-                <img src="https://randomuser.me/api/portraits/women/43.jpg" className="rounded-full shadow-md shadow-gray-600 w-24 h-24" />
+                <img src="./images/person.jpg" className="rounded-full shadow-md shadow-gray-600 w-24 h-24" />
             </div>
 
             {step === Step.ChooseMethod && <ChooseMethod setStep={setStep} recoveryMethod={recoveryMethod} setRecoveryMethod={setRecoveryMethod} />}

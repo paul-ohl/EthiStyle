@@ -1,7 +1,7 @@
 import Input from "components/atoms/input";
 import { useEffect, useState } from "react";
 
-export function Login() {
+export function Login({ handleLogin }: { handleLogin: () => void }) {
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
 
@@ -65,7 +65,11 @@ export function Login() {
                     </Input>
                     <p className="text-center mb-4 text-gray-500">Tu as oublié ton <a href="/lost-password" className="underline decoration-black">mot de passe ?</a></p>
                     <div className="mt-11 mx-auto flex flex-col text-center">
-                        <button disabled={true} className="w-3/4 bg-cyan-800 mx-auto mb-4 text-white text-xl leading-6 font-medium py-3 px-6 border border-transparent rounded-full focus:outline-none transition-colors" onClick={() => { }}>
+                        <button
+                            disabled={passwordError !== "" || emailError !== ""}
+                            className={"w-3/4 mx-auto mb-4 text-white text-xl leading-6 font-medium py-3 px-6 border border-transparent rounded-full focus:outline-none transition-colors " + ((passwordError !== "" || emailError !== "") ? "bg-gray-600" : "bg-cyan-800")}
+                            onClick={() => { handleLogin() }}
+                        >
                             Me connecter
                         </button>
                         <a href="/">Annuler</a>

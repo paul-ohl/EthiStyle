@@ -1,10 +1,10 @@
-import { Login } from "app/pages/login_register/login";
 import { Register } from "app/pages/login_register/register";
 import { useAuth } from "../provider/auth_provider";
 import { ProtectedRoute } from "./protected_route";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { WelcomePage } from "app/pages/login_register/welcome_page";
 import { LostPassword } from "app/pages/login_register/lost_password";
+import { LoginRoute } from "./login";
 
 export const Routes = () => {
   const { token } = useAuth();
@@ -23,7 +23,7 @@ export const Routes = () => {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: <LoginRoute />,
     },
     {
       path: "/register",
@@ -42,7 +42,7 @@ export const Routes = () => {
       children: [
         {
           path: "/",
-          element: <h1>Home</h1>,
+          element: <h1>Protected Home</h1>,
         },
         {
           path: "/settings",

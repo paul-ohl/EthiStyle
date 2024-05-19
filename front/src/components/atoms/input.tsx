@@ -15,7 +15,7 @@ const Input: React.FC<InputProps> = ({ setValue, name, error, type = 'text', chi
 
     return (
         <div className="relative rounded-full w-full">
-            <label htmlFor="email" className="absolute -top-2 left-4 inline-block bg-white px-1 text-xs font-medium text-red-600">{error}</label>
+            <label htmlFor="email" className="absolute -top-2 z-20 left-4 inline-block bg-white px-1 text-xs font-medium text-red-600">{error}</label>
             <input
                 type={type}
                 className={
