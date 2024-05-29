@@ -22,7 +22,7 @@ export const MainPage = () => {
       {selectedTab == SelectedTab.Search &&
         <SearchTab searchTerms={searchTerms} setSearchTerms={setSearchTerms} />}
       {selectedTab == SelectedTab.Notifications &&
-        <p className='text-center w-full mt-36 text-xl font-raleway'>Notifications</p>}
+        <p className='text-center w-full mt-36 text-xl font-raleway'>Vous n'avez pas de notifications pour le moment...</p>}
       {selectedTab == SelectedTab.Profile &&
         <Profile />}
       <div className="fixed w-full bottom-6">

@@ -3,7 +3,7 @@ import Input from "components/atoms/input";
 import ProfilePicUpload from "components/organisms/profile-pic-upload";
 import { useEffect, useState } from "react";
 
-export function Register() {
+export function Register({ handleRegister }: { handleRegister: () => void }) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -79,7 +79,12 @@ export function Register() {
           />
         </div>
         <div className="mt-11 mx-auto flex flex-col text-center">
-          <ButtonPrimary className="bg-cyan-800 mx-auto mb-4">Etape suivante</ButtonPrimary>
+          <ButtonPrimary
+            onClick={() => { handleRegister() }}
+            className="bg-cyan-800 mx-auto mb-4"
+          >
+            Etape suivante
+          </ButtonPrimary>
           <a href="/">Annuler</a>
         </div>
       </form>

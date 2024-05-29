@@ -7,6 +7,10 @@ import { LostPassword } from "app/pages/login_register/lost_password";
 import { LoginRoute } from "./login";
 import { MainPage } from "app/pages/main_page/main_page";
 import { SellingPage } from "app/pages/selling_page/selling_page";
+import GpsLocalisation from "app/pages/login_register/gps_localisation";
+import { ManualLocalisation } from "app/pages/login_register/manual_localisation";
+import { RegisterRoute } from "./register";
+import { LogoutRoute } from "./logout";
 
 export const Routes = () => {
   const { token } = useAuth();
@@ -15,7 +19,7 @@ export const Routes = () => {
     {
       path: "/about",
       element: <h1>About</h1>,
-    }
+    },
   ];
 
   const notAuthRoutes = [
@@ -29,7 +33,7 @@ export const Routes = () => {
     },
     {
       path: "/register",
-      element: <Register />,
+      element: <RegisterRoute />,
     },
     {
       path: "/lost-password",
@@ -59,8 +63,16 @@ export const Routes = () => {
           element: <h1>Profile</h1>,
         },
         {
+          path: "/location-gps",
+          element: <GpsLocalisation />,
+        },
+        {
+          path: "/location-manual",
+          element: <ManualLocalisation />,
+        },
+        {
           path: "/logout",
-          element: <h1>Logout</h1>,
+          element: <LogoutRoute />,
         },
       ],
     },

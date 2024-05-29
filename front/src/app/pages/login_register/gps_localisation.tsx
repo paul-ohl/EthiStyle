@@ -1,5 +1,6 @@
 import { ButtonPrimary } from 'components/atoms/button';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const GpsLocalisation: React.FC = () => {
   function getLocation() {
@@ -7,15 +8,17 @@ const GpsLocalisation: React.FC = () => {
   }
   function success(pos: GeolocationPosition) {
     const crd = pos.coords;
+    const navigate = useNavigate();
 
     console.log("Your current position is:");
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
     console.log(`More or less ${crd.accuracy} meters.`);
+    navigate('/', { replace: true });
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen font-poppins">
       <div className="bg-orange-50 w-28 h-28 rounded-full flex items-center justify-center">
         <svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="mask0_16_1525" maskUnits="userSpaceOnUse" x="4" y="4" width="55" height="54">
@@ -28,10 +31,12 @@ const GpsLocalisation: React.FC = () => {
           </g>
         </svg>
       </div>
-      <h1 className="text-2xl font-bold mt-10">Quelle est ta localisation ?</h1>
-      <p className="text-base m-8 text-center">Nous avons besoin de ta localisation pour te proposer la recherche à proximité et rendre les transactions plus écologique</p>
-      <ButtonPrimary onClick={getLocation}>Activer la localisation</ButtonPrimary>
-      <p className='mt-6 underline decoration-gray-700 text-gray-700'><a href='#'>Ajouter la localisation manuellement</a></p>
+      <h1 className="text-xl font-semibold mt-10">Quelle est ta localisation ?</h1>
+      <p className="text-sm m-8 text-gray-700 text-center">Nous avons besoin de ta localisation pour te proposer la recherche à proximité et rendre les transactions plus écologique</p>
+      <div className='px-8'>
+        <ButtonPrimary className='bg-cyan-800' onClick={getLocation}>Activer la localisation</ButtonPrimary>
+        <p className='mt-6 text-center underline decoration-gray-700 text-gray-700'><a href='/location-manual'>Ajouter la localisation manuellement</a></p>
+      </div>
     </div>
   );
 };
