@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SearchBar } from "./bar";
 import { AllCategories } from "./categories";
 import { SearchHistory } from "./history";
 import { SearchResults } from "./results";
 
-export const SearchTab = () => {
+export const SearchTab = ({ searchTerms, setSearchTerms }: { searchTerms: string, setSearchTerms: Dispatch<SetStateAction<string>> }) => {
   const [showHistory, setShowHistory] = useState(false);
-  const [searchTerms, setSearchTerms] = useState("");
 
   useEffect(() => {
     setShowHistory(false);

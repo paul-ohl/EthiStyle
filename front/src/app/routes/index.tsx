@@ -6,6 +6,7 @@ import { WelcomePage } from "app/pages/login_register/welcome_page";
 import { LostPassword } from "app/pages/login_register/lost_password";
 import { LoginRoute } from "./login";
 import { MainPage } from "app/pages/main_page/main_page";
+import { SellingPage } from "app/pages/selling_page/selling_page";
 
 export const Routes = () => {
   const { token } = useAuth();
@@ -44,6 +45,10 @@ export const Routes = () => {
         {
           path: "/",
           element: <MainPage />,
+        },
+        {
+          path: "/sell",
+          element: <SellingPage />,
         },
         {
           path: "/settings",

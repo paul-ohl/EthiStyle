@@ -63,8 +63,8 @@ export function WelcomePage() {
         <div className="w-full px-3">
           <ButtonPrimary onClick={() => { window.location.assign("/register") }} className="bg-cyan-800">Créer un compte</ButtonPrimary>
         </div>
-        <p className="mb-7 mt-4 text-cyan-700">
-          Tu as déjà un compte?{" "}
+        <p className="mb-7 mt-4 text-cyan-700 text-center">
+          Tu as déjà un compte?{" "}<br />
           <a className="font-bold text-sm underline decoration-solid" href="/login">
             Se connecter
           </a>
