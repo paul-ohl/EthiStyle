@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         'remae': '#94b882',
+        'girafon': '#ebc498',
       },
       fontFamily: {
         'tenor': ['Tenor Sans', 'sans-serif'],
