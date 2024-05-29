@@ -19,7 +19,7 @@ export function Register({ handleRegister }: { handleRegister: () => void }) {
     const isValid = email === "" || /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)
     setEmailError(isValid ? "" : "Email invalide");
     // if (isValid) {
-    // Fetch the email to check if it's already in use
+    // // Fetch the email to check if it's already in use
     // setEmailError("Email déjà utilisé");
     //   setEmailError("");
     // }
