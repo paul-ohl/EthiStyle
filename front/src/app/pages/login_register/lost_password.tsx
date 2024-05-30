@@ -2,6 +2,7 @@ import { ButtonPrimary } from "components/atoms/button";
 import Input from "components/atoms/input";
 import { SecretCode } from "components/molecules/secret_code";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 enum Step {
     ChooseMethod,
@@ -43,6 +44,8 @@ function ChooseMethod(
     { setStep, recoveryMethod, setRecoveryMethod }:
         { setStep: (step: Step) => void, recoveryMethod: RecoveryMethod, setRecoveryMethod: (recoveryMethod: RecoveryMethod) => void }
 ) {
+    const navigate = useNavigate();
+
     return (
         <>
             <div className="px-5 font-raleway pt-3 flex flex-col items-center w-full">
@@ -76,7 +79,14 @@ function ChooseMethod(
 
             <div className="absolute mb-24 bottom-0 left-5 right-5 flex flex-col items-center">
                 <ButtonPrimary onClick={() => { setStep(Step.EnterCode) }} className="bg-cyan-800">Etape Suivante</ButtonPrimary>
-                <a href="/"><p className="text-gray-800 font-normal mt-4">Annuler</p></a>
+                <a
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/', { replace: true });
+                    }}
+                >
+                    <p className="text-gray-800 font-normal mt-4">Annuler</p>
+                </a>
             </div>
         </>
     );

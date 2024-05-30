@@ -2,8 +2,10 @@ import { ButtonPrimary } from "components/atoms/button";
 import Input from "components/atoms/input";
 import ProfilePicUpload from "components/organisms/profile-pic-upload";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Register({ handleRegister }: { handleRegister: () => void }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -85,7 +87,14 @@ export function Register({ handleRegister }: { handleRegister: () => void }) {
           >
             Etape suivante
           </ButtonPrimary>
-          <a href="/">Annuler</a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/', { replace: true });
+            }}
+          >
+            Annuler
+          </a>
         </div>
       </form>
     </>

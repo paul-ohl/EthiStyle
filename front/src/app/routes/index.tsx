@@ -1,4 +1,3 @@
-import { Register } from "app/pages/login_register/register";
 import { useAuth } from "../provider/auth_provider";
 import { ProtectedRoute } from "./protected_route";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";

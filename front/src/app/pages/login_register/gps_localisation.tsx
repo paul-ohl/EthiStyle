@@ -3,12 +3,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const GpsLocalisation: React.FC = () => {
+  const navigate = useNavigate();
   function getLocation() {
     navigator.geolocation.getCurrentPosition(success, (e) => console.warn(e), { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
   }
   function success(pos: GeolocationPosition) {
     const crd = pos.coords;
-    const navigate = useNavigate();
 
     console.log("Your current position is:");
     console.log(`Latitude : ${crd.latitude}`);
@@ -35,7 +35,16 @@ const GpsLocalisation: React.FC = () => {
       <p className="text-sm m-8 text-gray-700 text-center">Nous avons besoin de ta localisation pour te proposer la recherche à proximité et rendre les transactions plus écologique</p>
       <div className='px-8'>
         <ButtonPrimary className='bg-cyan-800' onClick={getLocation}>Activer la localisation</ButtonPrimary>
-        <p className='mt-6 text-center underline decoration-gray-700 text-gray-700'><a href='/location-manual'>Ajouter la localisation manuellement</a></p>
+        <p className='mt-6 text-center underline decoration-gray-700 text-gray-700'>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/location-manual', { replace: true });
+            }}
+          >
+            Ajouter la localisation manuellement
+          </a>
+        </p>
       </div>
     </div>
   );

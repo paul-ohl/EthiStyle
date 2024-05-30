@@ -1,6 +1,9 @@
 import { ButtonPrimary } from "components/atoms/button";
+import { useNavigate } from "react-router-dom";
 
 export function WelcomePage() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col h-screen">
       <div
@@ -61,11 +64,17 @@ export function WelcomePage() {
           Aucun compromis sur ton style. <br />
         </h2>
         <div className="w-full px-3">
-          <ButtonPrimary onClick={() => { window.location.assign("/register") }} className="bg-cyan-800">Créer un compte</ButtonPrimary>
+          <ButtonPrimary onClick={() => { navigate("/register", { replace: true }) }} className="bg-cyan-800">Créer un compte</ButtonPrimary>
         </div>
         <p className="mb-7 mt-4 text-cyan-700 text-center">
           Tu as déjà un compte?{" "}<br />
-          <a className="font-bold text-sm underline decoration-solid" href="/login">
+          <a
+            className="font-bold text-sm underline decoration-solid"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/login", { replace: true });
+            }}
+          >
             Se connecter
           </a>
         </p>

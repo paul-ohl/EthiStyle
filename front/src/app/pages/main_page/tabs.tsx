@@ -1,5 +1,6 @@
 import React from 'react';
 import { SelectedTab } from './main_page';
+import { useNavigate } from 'react-router-dom';
 
 interface TabProps {
   selectedTab: SelectedTab,
@@ -7,9 +8,17 @@ interface TabProps {
 }
 
 const TabBar: React.FC<TabProps> = ({ selectedTab, setSelectedTab }) => {
+  const navigate = useNavigate();
+
   return (
     <div className='relative flex flex-row bg-remae opacity-90 backdrop-blur-sm rounded-full justify-around px-3 mx-4'>
-      <a href='/sell' className='w-12 h-12 bg-cyan-700 rounded-full absolute bottom-3 flex justify-center items-center z-10 border-white border-4'>
+      <a
+        onClick={(e) => {
+          e.preventDefault();
+          navigate('/sell', { replace: true });
+        }}
+        className='w-12 h-12 bg-cyan-700 rounded-full absolute bottom-3 flex justify-center items-center z-10 border-white border-4'
+      >
         <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M8 19.0833H19.0833M19.0833 19.0833H30.1667M19.0833 19.0833V8M19.0833 19.0833V30.1667" stroke="white" strokeWidth="3.67" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

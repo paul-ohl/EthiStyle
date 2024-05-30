@@ -1,10 +1,11 @@
-import { time } from "console";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const SellingPage = () => {
   const [selectedSizeType, setSelectedSizeType] = useState<'clothes' | 'shoes'>('clothes');
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   if (selectedImage !== null) {
@@ -18,7 +19,7 @@ export const SellingPage = () => {
         <button
           className="rounded-full w-9 h-9 ring-1 ring-grey-800 flex justify-center items-center"
           onClick={() => {
-            document.location.href = "/";
+            navigate('/', { replace: true });
           }}
         >
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -36,6 +37,7 @@ export const SellingPage = () => {
         <div className="flex flex-row justify-between mt-4">
           {uploadedImages.map((img, i) =>
             <div
+              key={i}
               className="object-cover relative w-1/3 h-32 rounded-lg mx-1"
             >
               <button
@@ -60,7 +62,6 @@ export const SellingPage = () => {
                 }
               </button>
               <img
-                key={i}
                 src={URL.createObjectURL(img)}
                 alt="profile-pic"
                 className="object-cover w-full h-32 rounded-lg"
@@ -152,13 +153,21 @@ export const SellingPage = () => {
           <div className="flex flex-col items-center font-poppins">
             <input
               onClick={() => {
-                document.location.href = "/";
+                navigate('/', { replace: true });
               }}
               type="button"
               className="w-full h-12 bg-cyan-800 text-white font-semibold rounded-full mt-8"
               value="Ajouter l'article"
             />
-            <a href="/" className="text-center text-gray-600 mx-auto mt-4">Supprimer</a>
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/', { replace: true });
+              }}
+              className="text-center text-gray-600 mx-auto mt-4"
+            >
+              Supprimer
+            </a>
           </div>
         </form>
       </div>

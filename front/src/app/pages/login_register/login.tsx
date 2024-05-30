@@ -1,7 +1,9 @@
 import Input from "components/atoms/input";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Login({ handleLogin }: { handleLogin: () => void }) {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
 
@@ -63,7 +65,18 @@ export function Login({ handleLogin }: { handleLogin: () => void }) {
                             </svg>
                         </div>
                     </Input>
-                    <p className="text-center mb-4 text-gray-500">Tu as oublié ton <a href="/lost-password" className="underline decoration-black">mot de passe ?</a></p>
+                    <p className="text-center mb-4 text-gray-500">
+                        Tu as oublié ton
+                        <a
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate('/lost-password', { replace: true });
+                            }}
+                            className="underline decoration-black"
+                        >
+                            mot de passe ?
+                        </a>
+                    </p>
                     <div className="mt-11 mx-auto flex flex-col text-center">
                         <button
                             disabled={passwordError !== "" || emailError !== ""}
@@ -72,7 +85,14 @@ export function Login({ handleLogin }: { handleLogin: () => void }) {
                         >
                             Me connecter
                         </button>
-                        <a href="/">Annuler</a>
+                        <a
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate('/', { replace: true });
+                            }}
+                        >
+                            Annuler
+                        </a>
                     </div>
                 </form>
             </div>
