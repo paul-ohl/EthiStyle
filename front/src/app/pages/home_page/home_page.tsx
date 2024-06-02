@@ -53,7 +53,7 @@ export const HomePage = (
       <div className="mt-3">
         <h3 className="text-lg my-2 ml-1 font-poppins">Suggestions</h3>
         <div className="grid grid-cols-2 gap-2 m-2">
-          {likedArticles.map((article) => (
+          {suggestedArticles.map((article) => (
             <ArticleCard
               key={article.id}
               article={article}
@@ -66,45 +66,53 @@ export const HomePage = (
   )
 }
 
-const likedArticles = [
+const suggestedArticles = [
   {
     id: Math.floor(Math.random() * 1000),
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=31",
-    liked: true,
+    photo: "./images/unsplash/fujiphilm-ojZ4wJNUM5w-unsplash.jpg",
+    liked: Math.random() > 0.5,
   },
   {
     id: Math.floor(Math.random() * 1000),
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=32",
-    liked: true,
+    photo: "./images/unsplash/frank-flores-eyFcZLLYvfA-unsplash.jpg",
+    liked: Math.random() > 0.5,
   },
   {
     id: Math.floor(Math.random() * 1000),
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=33",
-    liked: true,
+    photo: "./images/unsplash/engin-akyurt-jaZoffxg1yc-unsplash.jpg",
+    liked: Math.random() > 0.5,
   },
   {
     id: Math.floor(Math.random() * 1000),
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=34",
-    liked: true,
+    photo: "./images/unsplash/engin-akyurt-5raPrOhbKQo-unsplash.jpg",
+    liked: Math.random() > 0.5,
   },
   {
     id: Math.floor(Math.random() * 1000),
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=35",
-    liked: true,
+    photo: "./images/unsplash/dom-hill-nimElTcTNyY-unsplash.jpg",
+    liked: Math.random() > 0.5,
+  },
+  {
+    id: Math.floor(Math.random() * 1000),
+    name: "Nom de la marque",
+    size: "M/38",
+    price: 2 + Math.floor(Math.random() * 20),
+    photo: './images/unsplash/kemal-alkan-_BDBEP0ePQc-unsplash.jpg',
+    liked: Math.random() > 0.5,
   },
 ];

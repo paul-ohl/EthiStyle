@@ -83,7 +83,7 @@ const likedArticles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=21",
+    photo: "./images/unsplash/caio-coelho-QRN47la37gw-unsplash.jpg",
     liked: true,
   },
   {
@@ -91,7 +91,7 @@ const likedArticles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=22",
+    photo: "./images/unsplash/christian-bolt-VW5VjskNXZ8-unsplash.jpg",
     liked: true,
   },
   {
@@ -99,7 +99,7 @@ const likedArticles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=23",
+    photo: "./images/unsplash/cristofer-maximilian-AqLIkOzWDAk-unsplash.jpg",
     liked: true,
   },
   {
@@ -107,7 +107,7 @@ const likedArticles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=24",
+    photo: "./images/unsplash/derick-mckinney-2I0e38YkR1A-unsplash.jpg",
     liked: true,
   },
   {
@@ -115,7 +115,7 @@ const likedArticles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=25",
+    photo: "./images/unsplash/dinh-ng-jYz3EGBhDpk-unsplash.jpg",
     liked: true,
   },
 ];

@@ -6,8 +6,8 @@ export function ArticleCard(
 ) {
   return (
     <a onClick={onClick} key={article.id}>
-      <div className="relative">
-        <img className="object-cover" src={article.photo} />
+      <div className="relative aspect-[9/16]">
+        <img className="object-cover h-full" src={article.photo} />
         <button
           onClick={() => {
             // It doesn't work as of now...

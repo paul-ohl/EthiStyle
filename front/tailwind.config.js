@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      aspectRatio: {
+        '9/16': '9 / 16',
+      },
       colors: {
         'remae': '#94b882',
         'girafon': '#ebc498',

@@ -131,7 +131,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=21",
+    photo: "./images/unsplash/kemal-alkan-_BDBEP0ePQc-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
   {
@@ -139,7 +139,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=22",
+    photo: "./images/unsplash/keagan-henman-xPJYL0l5Ii8-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
   {
@@ -147,7 +147,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=23",
+    photo: "./images/unsplash/jennifer-marquez-NYMDlpfum1Q-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
   {
@@ -155,7 +155,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=24",
+    photo: "./images/unsplash/heather-ford-5gkYsrH_ebY-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
   {
@@ -163,7 +163,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=25",
+    photo: "./images/unsplash/hanna-zhyhar-RS9nsyy7QQM-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
   {
@@ -171,7 +171,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=26",
+    photo: "./images/unsplash/hailey-moeller-dumcRYel9Z0-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
   {
@@ -179,7 +179,7 @@ const articles = [
     name: "Nom de la marque",
     size: "M/38",
     price: 2 + Math.floor(Math.random() * 20),
-    photo: "https://picsum.photos/200/300?random=27",
+    photo: "./images/unsplash/girl-with-red-hat-qyy6pmM2Hg8-unsplash.jpg",
     liked: Math.random() > 0.5,
   },
 ];
